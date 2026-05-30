@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marcin Duda · Analytics Translator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0d1b2a;
+  --navy-2: #152336;
+  --navy-3: #1e3048;
+  --navy-4: #2a4060;
+  --slate: #8fa8c0;
+  --slate-2: #b8cdd9;
+  --slate-3: #dde8f0;
+  --amber: #e8a020;
+  --amber-2: #f0c060;
+  --amber-3: #fdf0d0;
+  --white: #f5f8fa;
+  --green: #3aad7a;
+  --green-bg: #0d2a1e;
+  --red: #e05555;
+  --red-bg: #2a1010;
+  --blue: #4a9fd4;
+  --blue-bg: #0a1e30;
+  --border: rgba(143,168,192,0.18);
+  --border-strong: rgba(143,168,192,0.32);
+  --radius: 10px;
+  --radius-sm: 6px;
+  --shadow: 0 2px 16px rgba(0,0,0,0.28);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.38);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: #080f18;
+  color: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ── LAYOUT ── */
+.app {
+  display: flex; flex-direction: column;
+  min-height: 100vh;
+  max-width: 1280px;
+  margin: 0 auto;
+  background: var(--navy);
+  box-shadow: 0 0 80px rgba(0,0,0,0.6);
+}
+.app-body { display: flex; flex: 1; min-height: 0; }
+.sidebar {
+  width: 285px; flex-shrink: 0;
+  background: var(--navy-2);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  position: sticky; top: 0; height: 100vh;
+  overflow-y: auto;
+}
+.main { flex: 1; overflow-x: hidden; min-width: 0; background: var(--navy); }
+
+/* ── SIDEBAR ── */
+.sidebar-logo {
+  padding: 28px 24px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.sidebar-logo .md-logo {
+  width: 80px;
+  height: 80px;
+  display: block;
+  margin-bottom: 12px;
+}
+.sidebar-logo h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px; font-weight: 600;
+  color: var(--white); line-height: 1.3;
+}
+.sidebar-logo p { font-size: 11px; color: var(--slate); margin-top: 3px; }
+
+.nav-section { padding: 18px 16px 4px; }
+.nav-section-label {
+  font-size: 10px; font-weight: 600; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--slate);
+  padding: 0 8px; margin-bottom: 6px;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 12px; border-radius: var(--radius-sm);
+  cursor: pointer; transition: all .18s;
+  color: var(--slate-2); font-size: 13px; font-weight: 400;
+  border: 1px solid transparent;
+  text-decoration: none; user-select: none;
+}
+.nav-item:hover { background: var(--navy-3); color: var(--white); }
+.nav-item.active {
+  background: rgba(232,160,32,0.12);
+  border-color: rgba(232,160,32,0.28);
+  color: var(--amber-2);
+}
+.nav-item .icon { font-size: 15px; flex-shrink: 0; opacity: .8; }
+.nav-dot {
+  width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+  background: var(--border-strong);
+}
+.nav-item.active .nav-dot { background: var(--amber); }
+
+.sidebar-footer {
+  margin-top: auto; padding: 16px 20px;
+  border-top: 1px solid var(--border);
+  font-size: 11px; color: var(--slate);
+}
+
+/* ── SECTIONS ── */
+.section { display: none; padding: 40px 44px; max-width: 900px; }
+.section.active { display: block; }
+
+.section-hero {
+  margin-bottom: 36px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--border);
+}
+.section-eyebrow {
+  font-size: 11px; font-weight: 600; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--amber);
+  margin-bottom: 10px;
+}
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px; font-weight: 700; line-height: 1.2;
+  color: var(--white); margin-bottom: 12px;
+}
+.section-lead {
+  font-size: 15px; color: var(--slate-2); line-height: 1.7;
+  max-width: 680px;
+}
+
+/* ── CARDS & GRIDS ── */
+.card {
+  background: var(--navy-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  transition: border-color .18s;
+}
+.card:hover { border-color: var(--border-strong); }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+
+/* ── TAGS / BADGES ── */
+.badge {
+  display: inline-flex; align-items: center;
+  font-size: 11px; font-weight: 500; letter-spacing: .03em;
+  padding: 3px 10px; border-radius: 999px;
+}
+.badge-amber { background: rgba(232,160,32,.15); color: var(--amber-2); border: 1px solid rgba(232,160,32,.3); }
+.badge-green { background: rgba(58,173,122,.15); color: #6fddb0; border: 1px solid rgba(58,173,122,.3); }
+.badge-blue { background: rgba(74,159,212,.15); color: #7ec8e8; border: 1px solid rgba(74,159,212,.3); }
+.badge-slate { background: rgba(143,168,192,.1); color: var(--slate-2); border: 1px solid var(--border); }
+.badge-red { background: rgba(224,85,85,.15); color: #f09090; border: 1px solid rgba(224,85,85,.3); }
+
+/* ── ENTRY POINT TABS ── */
+.ep-tabs {
+  display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px;
+}
+.ep-tab {
+  padding: 8px 16px; border-radius: 999px; cursor: pointer;
+  font-size: 13px; font-weight: 500; transition: all .18s;
+  border: 1px solid var(--border); color: var(--slate-2);
+  background: transparent;
+}
+.ep-tab:hover { border-color: var(--border-strong); color: var(--white); }
+.ep-tab.active {
+  background: rgba(232,160,32,.14);
+  border-color: rgba(232,160,32,.4);
+  color: var(--amber-2);
+}
+
+.ep-panel { display: none; }
+.ep-panel.active { display: block; }
+
+/* entry point header */
+.ep-header {
+  background: var(--navy-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  display: flex; align-items: flex-start; gap: 16px;
+}
+.ep-icon {
+  width: 44px; height: 44px; border-radius: 10px;
+  background: rgba(232,160,32,.14);
+  border: 1px solid rgba(232,160,32,.28);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.ep-title { font-size: 18px; font-weight: 600; color: var(--white); margin-bottom: 4px; }
+.ep-pain {
+  font-size: 13px; color: var(--slate-2); font-style: italic;
+  border-left: 2px solid var(--amber);
+  padding-left: 12px; margin-top: 10px; line-height: 1.6;
+}
+
+/* phases */
+.phases-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 20px; }
+.phase-card {
+  background: var(--navy-2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px 18px;
+}
+.phase-num {
+  font-size: 10px; font-weight: 600; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--amber); margin-bottom: 6px;
+}
+.phase-title { font-size: 13px; font-weight: 600; color: var(--white); margin-bottom: 10px; }
+.phase-list { list-style: none; }
+.phase-list li {
+  font-size: 12px; color: var(--slate-2);
+  padding: 4px 0; border-bottom: 1px solid var(--border);
+  line-height: 1.45;
+}
+.phase-list li:last-child { border-bottom: none; }
+.phase-list li::before { content: "→ "; color: var(--amber); opacity: .7; }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+.info-box {
+  background: var(--navy-2); border-radius: var(--radius-sm);
+  padding: 14px 18px; border: 1px solid var(--border);
+}
+.info-box-label {
+  font-size: 11px; font-weight: 600; letter-spacing: .07em;
+  text-transform: uppercase; margin-bottom: 10px;
+  display: flex; align-items: center; gap: 6px;
+}
+.info-box-label.warn { color: #f0a050; }
+.info-box-label.ok { color: #6fddb0; }
+.info-box ul { list-style: none; }
+.info-box ul li { font-size: 12px; color: var(--slate-2); padding: 3px 0; line-height: 1.45; }
+.info-box ul li::before { content: "· "; color: var(--slate); }
+
+.bq-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.bq-chip {
+  font-size: 12px; color: var(--slate-2);
+  background: var(--navy-3); border: 1px solid var(--border);
+  border-radius: 999px; padding: 4px 12px; cursor: default;
+}
+
+/* ── COMPLEXITY METER ── */
+.complexity-row { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+.complexity-label { font-size: 12px; color: var(--slate); font-weight: 500; }
+.complexity-dots { display: flex; gap: 5px; }
+.complexity-dot {
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--navy-4);
+}
+.complexity-dot.on { background: var(--amber); }
+.complexity-text { font-size: 12px; color: var(--slate-2); }
+
+/* ── DELIVERY METHODOLOGY ── */
+.delivery-stages {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  gap: 0; border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden;
+  margin-bottom: 32px;
+}
+.delivery-stage {
+  padding: 20px 20px;
+  border-right: 1px solid var(--border);
+  position: relative;
+}
+.delivery-stage:last-child { border-right: none; }
+.stage-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px; font-weight: 700;
+  color: rgba(232,160,32,.18); line-height: 1;
+  margin-bottom: 8px;
+}
+.stage-title {
+  font-size: 14px; font-weight: 600; color: var(--white); margin-bottom: 4px;
+}
+.stage-timing {
+  font-size: 11px; color: var(--amber);
+  font-family: 'DM Mono', monospace;
+  margin-bottom: 10px;
+}
+.stage-desc { font-size: 12px; color: var(--slate-2); line-height: 1.5; margin-bottom: 12px; }
+.stage-output {
+  font-size: 11px; color: var(--slate);
+  border-top: 1px solid var(--border); padding-top: 10px; margin-top: auto;
+}
+.stage-output strong { color: var(--slate-2); display: block; margin-bottom: 4px; }
+
+/* artefacts */
+.artefact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 32px; }
+.artefact-card {
+  background: var(--navy-2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 18px 20px;
+  border-top: 3px solid var(--amber);
+  transition: transform .18s, box-shadow .18s;
+}
+.artefact-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.artefact-num {
+  font-family: 'DM Mono', monospace; font-size: 11px;
+  color: var(--amber); margin-bottom: 8px;
+}
+.artefact-name { font-size: 14px; font-weight: 600; color: var(--white); margin-bottom: 6px; }
+.artefact-when {
+  font-size: 11px; color: var(--slate);
+  font-family: 'DM Mono', monospace; margin-bottom: 10px;
+}
+.artefact-desc { font-size: 12px; color: var(--slate-2); line-height: 1.5; }
+
+/* ── COMMON LAYER ── */
+.common-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 28px; }
+.common-card {
+  background: var(--navy-2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 18px 20px;
+}
+.common-icon { font-size: 22px; margin-bottom: 10px; }
+.common-title { font-size: 13px; font-weight: 600; color: var(--white); margin-bottom: 6px; }
+.common-desc { font-size: 12px; color: var(--slate-2); line-height: 1.5; }
+
+/* complexity table */
+.c-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+.c-table th {
+  text-align: left; font-size: 11px; font-weight: 600;
+  color: var(--slate); letter-spacing: .05em; text-transform: uppercase;
+  padding: 8px 10px; border-bottom: 1px solid var(--border);
+}
+.c-table th:not(:first-child) { text-align: center; font-size: 10px; }
+.c-table td {
+  padding: 7px 10px; border-bottom: 1px solid rgba(143,168,192,.08);
+  color: var(--slate-2);
+}
+.c-table td:not(:first-child) { text-align: center; }
+.pip { display: inline-block; width: 9px; height: 9px; border-radius: 50%; }
+.pip-empty { background: var(--navy-4); }
+.pip-lo { background: #EF9F27; }
+.pip-mid { background: #c07010; }
+.pip-hi { background: #854F0B; }
+
+/* ── METRIC OWNERSHIP ── */
+.metric-types { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 32px; }
+.metric-type-card {
+  border-radius: var(--radius); padding: 22px 24px; border: 1px solid;
+}
+.metric-type-card.upstream {
+  background: rgba(74,159,212,.06); border-color: rgba(74,159,212,.25);
+}
+.metric-type-card.domain {
+  background: rgba(58,173,122,.06); border-color: rgba(58,173,122,.25);
+}
+.metric-type-card.hybrid {
+  background: rgba(232,160,32,.06); border-color: rgba(232,160,32,.25);
+}
+.mt-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.mt-icon { font-size: 22px; }
+.mt-label { font-size: 12px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; }
+.metric-type-card.upstream .mt-label { color: #7ec8e8; }
+.metric-type-card.domain .mt-label { color: #6fddb0; }
+.metric-type-card.hybrid .mt-label { color: var(--amber-2); }
+.mt-title { font-size: 15px; font-weight: 600; color: var(--white); margin-bottom: 8px; }
+.mt-desc { font-size: 12px; color: var(--slate-2); line-height: 1.55; margin-bottom: 12px; }
+.mt-rule {
+  font-size: 12px; padding: 8px 12px; border-radius: var(--radius-sm);
+  font-family: 'DM Mono', monospace; line-height: 1.4;
+}
+.metric-type-card.upstream .mt-rule { background: rgba(74,159,212,.1); color: #7ec8e8; }
+.metric-type-card.domain .mt-rule { background: rgba(58,173,122,.1); color: #6fddb0; }
+.metric-type-card.hybrid .mt-rule { background: rgba(232,160,32,.1); color: var(--amber-2); }
+
+/* metric dictionary sample */
+.dict-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.dict-table th {
+  text-align: left; font-size: 11px; font-weight: 600; color: var(--slate);
+  letter-spacing: .05em; text-transform: uppercase;
+  padding: 10px 12px; border-bottom: 1px solid var(--border);
+  background: var(--navy-2);
+}
+.dict-table td {
+  padding: 10px 12px; border-bottom: 1px solid rgba(143,168,192,.08);
+  color: var(--slate-2); vertical-align: top;
+}
+.dict-table tr:hover td { background: rgba(255,255,255,.02); }
+.origin-tag {
+  display: inline-flex; align-items: center;
+  font-size: 10px; font-weight: 600; padding: 2px 8px;
+  border-radius: 4px; letter-spacing: .04em; white-space: nowrap;
+}
+.origin-tag.uc { background: rgba(74,159,212,.15); color: #7ec8e8; }
+.origin-tag.dd { background: rgba(58,173,122,.15); color: #6fddb0; }
+.origin-tag.ha { background: rgba(232,160,32,.15); color: var(--amber-2); }
+.metric-name { color: var(--white); font-weight: 500; }
+
+/* ── DATA MESH ── */
+.mesh-principles { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 28px; }
+.mesh-card {
+  background: var(--navy-2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 18px 22px;
+}
+.mesh-card-label {
+  font-size: 10px; font-weight: 600; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--amber); margin-bottom: 6px;
+}
+.mesh-card-title { font-size: 14px; font-weight: 600; color: var(--white); margin-bottom: 8px; }
+.mesh-card-desc { font-size: 12px; color: var(--slate-2); line-height: 1.55; }
+
+.change-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.change-table th {
+  text-align: left; font-size: 11px; font-weight: 600; color: var(--slate);
+  letter-spacing: .05em; text-transform: uppercase;
+  padding: 10px 14px; border-bottom: 1px solid var(--border);
+}
+.change-table td {
+  padding: 10px 14px; border-bottom: 1px solid rgba(143,168,192,.08);
+  color: var(--slate-2); vertical-align: top;
+}
+.change-table tr:hover td { background: rgba(255,255,255,.02); }
+.change-what { color: var(--white); font-weight: 500; }
+.change-scope {
+  display: inline-block; font-size: 10px; padding: 2px 8px;
+  border-radius: 4px; font-weight: 600;
+}
+.scope-add { background: rgba(58,173,122,.15); color: #6fddb0; }
+.scope-frame { background: rgba(74,159,212,.15); color: #7ec8e8; }
+.scope-gate { background: rgba(232,160,32,.15); color: var(--amber-2); }
+
+/* ── VALUE PROPOSITION ── */
+.vp-problem {
+  background: var(--navy-3); border: 1px solid var(--border);
+  border-left: 3px solid var(--amber);
+  border-radius: var(--radius); padding: 22px 28px; margin-bottom: 28px;
+}
+.vp-problem p { font-size: 14px; color: var(--slate-2); line-height: 1.7; }
+.vp-problem p + p { margin-top: 12px; }
+
+.positioning-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 28px; }
+.pos-card {
+  background: var(--navy-2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 18px 22px;
+}
+.pos-card-ep { font-size: 11px; color: var(--amber); font-weight: 600; margin-bottom: 4px; }
+.pos-card-text { font-size: 13px; color: var(--slate-2); line-height: 1.6; font-style: italic; }
+
+/* ── DIVIDER / LABELS ── */
+.block-label {
+  font-size: 11px; font-weight: 600; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--slate);
+  margin-bottom: 14px; margin-top: 28px;
+  padding-bottom: 8px; border-bottom: 1px solid var(--border);
+}
+.block-label:first-child { margin-top: 0; }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--navy-2); }
+::-webkit-scrollbar-thumb { background: var(--navy-4); border-radius: 3px; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1100px) {
+  .phases-grid { grid-template-columns: 1fr 1fr; }
+  .delivery-stages { grid-template-columns: 1fr 1fr; }
+  .artefact-grid { grid-template-columns: 1fr 1fr; }
+  .common-grid { grid-template-columns: 1fr 1fr; }
+  .metric-types { grid-template-columns: 1fr; }
+  .mesh-principles { grid-template-columns: 1fr; }
+}
+@media (max-width: 900px) {
+  .sidebar { width: 240px; }
+  .section { padding: 28px 28px; }
+  .grid-2 { grid-template-columns: 1fr; }
+  .grid-3 { grid-template-columns: 1fr 1fr; }
+  .two-col { grid-template-columns: 1fr; }
+  .positioning-cards { grid-template-columns: 1fr; }
+  .copyright-bar { padding: 16px 24px; }
+}
+@media (max-width: 700px) {
+  .sidebar { display: none; }
+  .section { padding: 24px 20px; }
+  .phases-grid { grid-template-columns: 1fr; }
+  .delivery-stages { grid-template-columns: 1fr; }
+  .artefact-grid { grid-template-columns: 1fr; }
+  .common-grid { grid-template-columns: 1fr; }
+  .grid-3 { grid-template-columns: 1fr; }
+  .ep-tabs { gap: 6px; }
+  .ep-tab { font-size: 12px; padding: 6px 12px; }
+  .section-title { font-size: 24px; }
+  .copyright-bar { flex-direction: column; align-items: flex-start; }
+  .copyright-right { text-align: left; }
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.section.active { animation: fadeUp .3s ease; }
+
+/* ── COPYRIGHT FOOTER ── */
+.copyright-bar {
+  border-top: 1px solid var(--border);
+  background: var(--navy-2);
+  padding: 16px 44px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 20px; flex-wrap: wrap;
+}
+.copyright-left {
+  display: flex; align-items: center; gap: 14px;
+}
+.footer-md-logo {
+  width: 36px;
+  height: 36px;
+  display: block;
+  flex-shrink: 0;
+}
+.copyright-name {
+  font-size: 13px; font-weight: 600; color: var(--white);
+}
+.copyright-name span {
+  font-weight: 400; color: var(--slate); margin-left: 4px;
+}
+.copyright-notice {
+  font-size: 11px; color: var(--slate); margin-top: 2px; line-height: 1.5;
+}
+.copyright-right {
+  font-size: 11px; color: var(--slate); text-align: right; line-height: 1.6;
+}
+.copyright-right strong { color: var(--slate-2); font-weight: 500; }
+.ip-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 10px; font-weight: 600; letter-spacing: .06em;
+  text-transform: uppercase; padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(232,160,32,.1);
+  border: 1px solid rgba(232,160,32,.25);
+  color: var(--amber-2);
+  margin-top: 5px;
+}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="app-body">
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <svg class="md-logo" viewBox="0 0 120 120" width="80" height="80" xmlns="http://www.w3.org/2000/svg" aria-label="Marcin Duda logo" role="img">
+      <rect width="120" height="120" rx="18" fill="#0d1b2a"/>
+      <line x1="14" y1="68" x2="108" y2="68" stroke="#1a2e45" stroke-width="0.7"/>
+      <line x1="14" y1="46" x2="108" y2="46" stroke="#1a2e45" stroke-width="0.7"/>
+      <line x1="14" y1="24" x2="108" y2="24" stroke="#1a2e45" stroke-width="0.7"/>
+      <polyline points="16,82 24,76 32,72 40,66 48,62 56,55 64,50 72,44" fill="none" stroke="#4a9fd4" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
+      <polygon points="72,44 80,38 88,31 96,26 104,20 104,32 96,38 88,44 80,48 72,52" fill="#e8a020" opacity="0.10"/>
+      <polyline points="72,44 80,38 88,31 96,26 104,20" fill="none" stroke="#e8a020" stroke-width="0.9" stroke-dasharray="3 2" stroke-linecap="round" opacity="0.55"/>
+      <polyline points="72,52 80,48 88,44 96,38 104,32" fill="none" stroke="#e8a020" stroke-width="0.9" stroke-dasharray="3 2" stroke-linecap="round" opacity="0.35"/>
+      <polyline points="72,48 80,43 88,37 96,32 104,26" fill="none" stroke="#e8a020" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.75"/>
+      <line x1="72" y1="38" x2="72" y2="86" stroke="#e8a020" stroke-width="0.7" stroke-dasharray="2 3" opacity="0.3"/>
+      <line x1="22" y1="58" x2="22" y2="82" stroke="#8fa8c0" stroke-width="0.9" opacity="0.45"/>
+      <rect x="19" y="66" width="6" height="12" rx="1.2" fill="#3aad7a" opacity="0.65"/>
+      <line x1="31" y1="54" x2="31" y2="80" stroke="#8fa8c0" stroke-width="0.9" opacity="0.45"/>
+      <rect x="28" y="62" width="6" height="14" rx="1.2" fill="#e05555" opacity="0.55"/>
+      <line x1="40" y1="44" x2="40" y2="76" stroke="#8fa8c0" stroke-width="0.9" opacity="0.45"/>
+      <rect x="37" y="52" width="6" height="18" rx="1.2" fill="#3aad7a" opacity="0.65"/>
+      <line x1="50" y1="50" x2="50" y2="76" stroke="#8fa8c0" stroke-width="0.9" opacity="0.45"/>
+      <rect x="47" y="58" width="6" height="12" rx="1.2" fill="#e05555" opacity="0.45"/>
+      <line x1="14" y1="10" x2="14" y2="90" stroke="#2a4060" stroke-width="1.2" stroke-linecap="round"/>
+      <line x1="14" y1="90" x2="108" y2="90" stroke="#2a4060" stroke-width="1.2" stroke-linecap="round"/>
+      <circle cx="14" cy="90" r="2.8" fill="#e8a020"/>
+      <path d="M16 88 L16 18 L37 52 L58 18 L58 88" fill="none" stroke="#f5f8fa" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+      <path d="M64 18 L64 88 L76 88 Q106 88 106 53 Q106 18 76 18 Z" fill="none" stroke="#e8a020" stroke-width="3" stroke-linejoin="round"/>
+    </svg>
+    <h1>Marcin Duda</h1>
+    <p>Analytics Translator · Consulting Framework</p>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">Framework</div>
+    <a class="nav-item active" onclick="showSection('overview')">
+      <span class="nav-dot"></span> Overview & Problem Statement
+    </a>
+    <a class="nav-item" onclick="showSection('entrypoints')">
+      <span class="nav-dot"></span> Entry Point Framework
+    </a>
+    <a class="nav-item" onclick="showSection('methodology')">
+      <span class="nav-dot"></span> Delivery Methodology
+    </a>
+    <a class="nav-item" onclick="showSection('common')">
+      <span class="nav-dot"></span> Common Layer
+    </a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">Architecture</div>
+    <a class="nav-item" onclick="showSection('metrics')">
+      <span class="nav-dot"></span> Metric Ownership Model
+    </a>
+    <a class="nav-item" onclick="showSection('datamesh')">
+      <span class="nav-dot"></span> Data Mesh Alignment
+    </a>
+  </div>
+
+  <div class="sidebar-footer">
+    <div style="font-size:13px;color:var(--amber-2);font-style:italic;line-height:1.5;margin-bottom:8px;">"You don't have a data problem. You have a last-mile analytics problem."</div>
+    Marcin Duda · Analytics Translator<br>Consulting Framework · 2026
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+<!-- ══════════════════════════════════════════════
+     OVERVIEW
+══════════════════════════════════════════════ -->
+<section id="overview" class="section active">
+  <div class="section-hero">
+    <div class="section-eyebrow">Analytics Translator</div>
+    <h2 class="section-title">You don't have a data problem.<br>You have a last-mile analytics problem.</h2>
+    <p class="section-lead" style="font-size:17px;color:var(--white);font-weight:500;margin-bottom:10px;">I solve that.</p>
+    <p class="section-lead">Most organisations have invested heavily in data infrastructure. The pipelines run. The warehouse is populated. The dashboards exist. And yet the business still doesn't trust the numbers, still can't answer the questions that matter, and still runs on spreadsheets, drowning in reconciliations.</p>
+    <p class="section-lead" style="margin-top:10px;">That's not a data problem. That's a last-mile analytics problem: the gap between what your data infrastructure can do and what your business users actually get from it. It's the most consistently under-invested layer in analytics, and it's the space I specialize in.</p>
+  </div>
+
+  <!-- Identity card -->
+  <div style="background:rgba(232,160,32,.06);border:1px solid rgba(232,160,32,.28);border-radius:var(--radius);padding:24px 28px;margin-bottom:28px;display:flex;align-items:flex-start;gap:20px;">
+    <svg viewBox="0 0 120 120" width="52" height="52" xmlns="http://www.w3.org/2000/svg" aria-label="Marcin Duda logo" role="img" style="display:block;flex-shrink:0;">
+      <rect width="120" height="120" rx="18" fill="#0d1b2a"/>
+      <line x1="14" y1="68" x2="108" y2="68" stroke="#1a2e45" stroke-width="0.7"/>
+      <line x1="14" y1="46" x2="108" y2="46" stroke="#1a2e45" stroke-width="0.7"/>
+      <line x1="14" y1="24" x2="108" y2="24" stroke="#1a2e45" stroke-width="0.7"/>
+      <polyline points="16,82 24,76 32,72 40,66 48,62 56,55 64,50 72,44" fill="none" stroke="#4a9fd4" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
+      <polygon points="72,44 80,38 88,31 96,26 104,20 104,32 96,38 88,44 80,48 72,52" fill="#e8a020" opacity="0.10"/>
+      <polyline points="72,44 80,38 88,31 96,26 104,20" fill="none" stroke="#e8a020" stroke-width="0.9" stroke-dasharray="3 2" stroke-linecap="round" opacity="0.55"/>
+      <polyline points="72,52 80,48 88,44 96,38 104,32" fill="none" stroke="#e8a020" stroke-width="0.9" stroke-dasharray="3 2" stroke-linecap="round" opacity="0.35"/>
+      <polyline points="72,48 80,43 88,37 96,32 104,26" fill="none" stroke="#e8a020" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.75"/>
+      <line x1="72" y1="38" x2="72" y2="86" stroke="#e8a020" stroke-width="0.7" stroke-dasharray="2 3" opacity="0.3"/>
+      <line x1="22" y1="58" x2="22" y2="82" stroke="#8fa8c0" stroke-width="0.9" opacity="0.45"/>
+      <rect x="19" y="66" width="6" height="12" rx="1.2" fill="#3aad7a" opacity="0.65"/>
+      <line x1="40" y1="44" x2="40" y2="76" stroke="#8fa8c0" stroke-width="0.9" opacity="0.45"/>
+      <rect x="37" y="52" width="6" height="18" rx="1.2" fill="#3aad7a" opacity="0.65"/>
+      <line x1="14" y1="10" x2="14" y2="90" stroke="#2a4060" stroke-width="1.2" stroke-linecap="round"/>
+      <line x1="14" y1="90" x2="108" y2="90" stroke="#2a4060" stroke-width="1.2" stroke-linecap="round"/>
+      <circle cx="14" cy="90" r="2.8" fill="#e8a020"/>
+      <path d="M16 88 L16 18 L37 52 L58 18 L58 88" fill="none" stroke="#f5f8fa" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+      <path d="M64 18 L64 88 L76 88 Q106 88 106 53 Q106 18 76 18 Z" fill="none" stroke="#e8a020" stroke-width="3" stroke-linejoin="round"/>
+    </svg>
+    <div>
+      <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--white);margin-bottom:2px;">Marcin Duda</div>
+      <div style="font-size:13px;color:var(--amber-2);font-weight:500;margin-bottom:10px;letter-spacing:.02em;">Analytics Translator</div>
+      <div style="font-size:13px;color:var(--slate-2);line-height:1.65;max-width:620px;">Full-stack analytics practitioner specialising in the last mile — the layer between data infrastructure and business users. I build semantic models, design self-service analytics, and make sure the investment in data actually reaches the people who need to make decisions with it.</div>
+    </div>
+  </div>
+
+  <div class="vp-problem">
+    <p>Most organizations have invested heavily in modern data stacks — warehouses, BI platforms, and increasingly, AI tooling. Yet leadership teams still struggle to convert those investments into genuine business capability.</p>
+    <p>The symptoms are familiar: business users exporting data into Excel, rebuilding reports manually, and debating conflicting versions of the same metrics. The underlying problem is rarely the technology itself. It is that the “last mile” between the data and the decision-maker was never fully designed.</p>
+    <p>That gap is becoming even more pronounced as organizations accelerate AI adoption without sufficiently mature data foundations, semantic structures, or shared business definitions to support reliable outcomes.</p>
+    <p>I specialize in delivering that last mile.</p>
+    <p>I bridge the gap between what an organization’s data platform can technically provide and what business users can confidently explore, analyze, and act upon. This is rarely solved by building another dashboard. It is solved through navigable semantic models, intentional analytical design, and enablement strategies that make data understandable, trustworthy, and operationally useful.</p>
+    <p>My focus is turning complex data infrastructure into an intuitive, commercially aligned capability — enabling data to become a reliable operational asset for the people making decisions every day.</p>
+  </div>
+
+  <div class="block-label">How I work</div>
+  <div class="grid-3">
+    <div class="card">
+      <div style="font-size:24px;margin-bottom:10px;">🎯</div>
+      <div style="font-size:13px;font-weight:600;color:var(--white);margin-bottom:6px;">You know the business. I turn that knowledge into analytics.</div>
+      <div style="font-size:12px;color:var(--slate-2);line-height:1.55;">You are the domain expert. My job is to ask the questions that turn your business logic into a data model that actually reflects how your business works. That translation is a distinct skill from knowing your industry — and it's the one that's been missing.</div>
+    </div>
+    <div class="card">
+      <div style="font-size:24px;margin-bottom:10px;">⚡</div>
+      <div style="font-size:13px;font-weight:600;color:var(--white);margin-bottom:6px;">Fast, pragmatic, iterative</div>
+      <div style="font-size:12px;color:var(--slate-2);line-height:1.55;">Proof of Concept on real sample data first. Working prototype on full data second. Deployment and iterative enhancements third. Every stage produces something usable — no months-long requirements gathering before first value.</div>
+    </div>
+    <div class="card">
+      <div style="font-size:24px;margin-bottom:10px;">📋</div>
+      <div style="font-size:13px;font-weight:600;color:var(--white);margin-bottom:6px;">Never a black box</div>
+      <div style="font-size:12px;color:var(--slate-2);line-height:1.55;">Documentation is built into the delivery rhythm, not deferred. A fixed, minimal artefact set ensures every solution remains explainable, ownable, and maintainable — by you, not by me.</div>
+    </div>
+  </div>
+
+  <div class="block-label" style="margin-top:28px;">What the Analytics Translator does differently</div>
+  <div class="grid-2">
+    <div class="card">
+      <div style="font-size:12px;color:var(--slate);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">What most BI delivery looks like</div>
+      <ul style="list-style:none;font-size:12px;color:var(--slate-2);">
+        <li style="padding:4px 0;border-bottom:1px solid var(--border);">→ Technically correct pipelines nobody navigates</li>
+        <li style="padding:4px 0;border-bottom:1px solid var(--border);">→ Dashboards that only show "what happened"</li>
+        <li style="padding:4px 0;border-bottom:1px solid var(--border);">→ Models named for developers, not business users</li>
+        <li style="padding:4px 0;">→ Delivery without enablement or ownership transfer</li>
+      </ul>
+    </div>
+    <div class="card" style="border-color:rgba(232,160,32,.28);background:rgba(232,160,32,.04);">
+      <div style="font-size:12px;color:var(--amber);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">What I deliver</div>
+      <ul style="list-style:none;font-size:12px;color:var(--slate-2);">
+        <li style="padding:4px 0;border-bottom:1px solid var(--border);">→ Semantic layer designed around business questions</li>
+        <li style="padding:4px 0;border-bottom:1px solid var(--border);">→ KPIs that answer: what happened, why, and what next</li>
+        <li style="padding:4px 0;border-bottom:1px solid var(--border);">→ Metrics with single definitions, single owners</li>
+        <li style="padding:4px 0;">→ Self-service that users actually trust and adopt</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     ENTRY POINTS
+══════════════════════════════════════════════ -->
+<section id="entrypoints" class="section">
+  <div class="section-hero">
+    <div class="section-eyebrow">Marcin Duda · Analytics Translator</div>
+    <h2 class="section-title">Where does your conversation start?</h2>
+    <p class="section-lead">Business users don't present their problems in analytical terms — they present them as the situation they're in. This framework meets them at their entry point and maps a clear contribution narrative from there. Select the situation that best describes your organisation.</p>
+  </div>
+
+  <div class="ep-tabs">
+    <button class="ep-tab active" onclick="showEP('dashboard', this)">📊 Existing Dashboard</button>
+    <button class="ep-tab" onclick="showEP('silos', this)">🗄️ Disconnected Data</button>
+    <button class="ep-tab" onclick="showEP('spreadsheets', this)">📑 Spreadsheet Dependency</button>
+    <button class="ep-tab" onclick="showEP('ai', this)">🤖 AI / Copilot Pressure</button>
+    <button class="ep-tab" onclick="showEP('greenfield', this)">📈 No Analytics Capability</button>
+    <button class="ep-tab" onclick="showEP('domain', this)">❓ Domain Credibility Test</button>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="ep-dashboard" class="ep-panel active">
+    <div class="ep-header">
+      <div class="ep-icon">📊</div>
+      <div>
+        <div class="ep-title">We have a dashboard</div>
+        <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;">
+          <span class="badge badge-slate">Most common entry</span>
+          <span class="badge badge-amber">Complexity: Targeted</span>
+        </div>
+        <div class="ep-pain">"Our dashboard is always out of date, nobody knows where the numbers come from, and it only tells us what happened — not what to do about it."</div>
+      </div>
+    </div>
+    <div class="phases-grid">
+      <div class="phase-card"><div class="phase-num">Phase 01</div><div class="phase-title">Assess Current State</div><ul class="phase-list"><li>Audit report sources — how many, which systems</li><li>Identify refresh mechanism — manual, scheduled, broken</li><li>Catalogue all metrics: where defined, by whom</li><li>Document who uses it, what decisions it informs</li><li>Score trust level: do users believe the numbers?</li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 02</div><div class="phase-title">Define Target State</div><ul class="phase-list"><li>Agree analytical layers: tracking / diagnosis / action</li><li>Define minimum refresh cadence acceptable</li><li>List 5–10 KPIs that must be certified and consistent</li><li>Agree what "trusted" looks like — watermark, lineage</li><li>Sketch report structure before touching the model</li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 03</div><div class="phase-title">Gaps & Bottlenecks</div><ul class="phase-list"><li>Metric logic lives in report, not shared model</li><li>No time intelligence — only point-in-time snapshots</li><li>Manual data pull blocks refresh frequency</li><li>No single KPI owner → definitions drift</li><li>Report shows status but no drill-to-cause</li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 04</div><div class="phase-title">Solution Steps</div><ul class="phase-list"><li>Fix refresh pipeline first — immediate visible win</li><li>Migrate metric logic to certified model layer</li><li>Add time intelligence: YoY, MoM, rolling 12</li><li>Redesign layout: status → diagnosis → action</li><li>Certify model, document measures, add lineage</li></ul></div>
+    </div>
+    <div class="two-col">
+      <div class="info-box"><div class="info-box-label warn">⚠ Key bottlenecks</div><ul><li>Manual refresh creates data staleness</li><li>Metric logic buried in visual-level DAX</li><li>No drill-through — can't go from summary to cause</li><li>Trust deficit from past errors never addressed</li></ul></div>
+      <div class="info-box"><div class="info-box-label ok">✓ Iterative target state</div><ul><li>Automated daily (or more frequent) refresh</li><li>All KPIs defined once in model, not in report</li><li>Three-layer report structure operational</li><li>Certified model with documented owner published</li></ul></div>
+    </div>
+    <div class="card"><div style="font-size:11px;color:var(--slate);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">Business questions this unlocks</div><div class="bq-chips"><span class="bq-chip">Why does Finance get a different number than Operations?</span><span class="bq-chip">Can I see this by region, product, and month?</span><span class="bq-chip">What does YoY mean in this context?</span><span class="bq-chip">How do I know this is the right number?</span></div><div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);font-size:13px;color:var(--slate-2);font-style:italic;">"I don't just make your dashboard look better — I make it so your team can trust it, explore it, and act on it without asking IT for a new report every time."</div></div>
+  </div>
+
+  <!-- SILOS -->
+  <div id="ep-silos" class="ep-panel">
+    <div class="ep-header">
+      <div class="ep-icon">🗄️</div>
+      <div>
+        <div class="ep-title">Data is everywhere but disconnected</div>
+        <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;"><span class="badge badge-slate">Full stack opportunity</span><span class="badge badge-red">Complexity: Full Stack</span></div>
+        <div class="ep-pain">"We have data in the ERP, the CRM, spreadsheets, and a shared drive. No one can ever get a consistent answer because everyone is pulling from a different place."</div>
+      </div>
+    </div>
+    <div class="phases-grid">
+      <div class="phase-card"><div class="phase-num">Phase 01</div><div class="phase-title">Assess Current State</div><ul class="phase-list"><li>Map all source systems: ERP, CRM, WMS, spreadsheets</li><li>Identify shared entities — customer, product, time</li><li>Document how each team currently joins data</li><li>Identify the most painful reconciliation — anchor it</li><li>Assess data quality per source: completeness, latency</li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 02</div><div class="phase-title">Define Target State</div><ul class="phase-list"><li>Define minimum set of conformed dimensions needed</li><li>Agree primary analytical questions integration must answer</li><li>Set data freshness targets per domain</li><li>Identify who owns each entity definition going forward</li><li>Agree on target consumption layer: Power BI, Excel</li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 03</div><div class="phase-title">Gaps & Bottlenecks</div><ul class="phase-list"><li>No shared customer/product master across systems</li><li>No integration layer — joins done manually in Excel</li><li>Conflicting grain across sources (daily vs monthly)</li><li>IT controls source access — business can't self-serve</li><li>No agreed date standard across systems</li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 04</div><div class="phase-title">Solution Steps</div><ul class="phase-list"><li>Build staging layer: extract each source cleanly</li><li>Design conformed dimensions: customer, product, time</li><li>Build fact tables at agreed grain per subject area</li><li>Develop semantic model — shared KPIs, time intelligence</li><li>Deploy governed self-service with RLS and certified metrics</li></ul></div>
+    </div>
+    <div class="two-col">
+      <div class="info-box"><div class="info-box-label warn">⚠ Key bottlenecks</div><ul><li>No shared entity definitions across systems</li><li>Manual join process = reconciliation meetings</li><li>Different date semantics across source systems</li><li>No governed access path for business users</li></ul></div>
+      <div class="info-box"><div class="info-box-label ok">✓ Iterative target state</div><ul><li>Single version of every shared entity</li><li>Automated integration pipeline with documented lineage</li><li>Business users self-serve from one certified model</li><li>Reconciliation meetings eliminated for covered domains</li></ul></div>
+    </div>
+    <div class="card"><div style="font-size:11px;color:var(--slate);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">Business questions this unlocks</div><div class="bq-chips"><span class="bq-chip">Why does my revenue not match Finance?</span><span class="bq-chip">Can we combine CRM pipeline with ERP actuals?</span><span class="bq-chip">Who owns the customer dimension?</span><span class="bq-chip">How do we stop data living in five places?</span></div><div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);font-size:13px;color:var(--slate-2);font-style:italic;">"I can take your scattered data landscape and build a single connected model every function pulls from — so reconciliation meetings become unnecessary."</div></div>
+  </div>
+
+  <!-- SPREADSHEETS -->
+  <div id="ep-spreadsheets" class="ep-panel">
+    <div class="ep-header">
+      <div class="ep-icon">📑</div>
+      <div>
+        <div class="ep-title">Everything runs on spreadsheets</div>
+        <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;"><span class="badge badge-slate">Governance entry</span><span class="badge badge-blue">Complexity: Moderate</span></div>
+        <div class="ep-pain">"We have one spreadsheet that takes three hours every month to update, nobody else understands it, and we're terrified it's wrong."</div>
+      </div>
+    </div>
+    <div class="phases-grid">
+      <div class="phase-card"><div class="phase-num">Phase 01</div><div class="phase-title">Assess Current State</div><ul class="phase-list"><li>Identify the 3–5 most business-critical spreadsheets</li><li>Map data inputs: where does each spreadsheet get data?</li><li>Document the logic: calculations, allocations, filters</li><li>Identify single point of failure: who maintains it?</li><li>Assess downstream use: what decisions does it feed?</li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 02</div><div class="phase-title">Define Target State</div><ul class="phase-list"><li>Agree which processes must be automated first</li><li>Define acceptable refresh cadence per process</li><li>Identify what logic belongs in model vs spreadsheet</li><li>Agree governance: documentation, ownership, version control</li><li>Define what "safe" looks like — who can change it?</li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 03</div><div class="phase-title">Gaps & Bottlenecks</div><ul class="phase-list"><li>Data acquisition is manual — human is the bottleneck</li><li>Logic undocumented — one person holds it in their head</li><li>No version control — changes invisible and irreversible</li><li>Spreadsheet used as both ETL and reporting tool</li><li>No data quality check before spreadsheet runs</li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 04</div><div class="phase-title">Solution Steps</div><ul class="phase-list"><li>Replace manual pulls with Power Query / pipeline</li><li>Document and test all existing logic first</li><li>Migrate metric calculations to shared model layer</li><li>Retain Excel as governed consumption tool, not data owner</li><li>Add version control, refresh schedule, named owner</li></ul></div>
+    </div>
+    <div class="two-col">
+      <div class="info-box"><div class="info-box-label warn">⚠ Key bottlenecks</div><ul><li>Single person dependency on every critical file</li><li>No automated data connection — all manual copy-paste</li><li>Logic embedded in formulas nobody else understands</li><li>No change control — errors introduced silently</li></ul></div>
+      <div class="info-box"><div class="info-box-label ok">✓ Iterative target state</div><ul><li>Automated data feed replaces manual extraction</li><li>Core metric logic in versioned, certified model</li><li>Excel retained as analysis surface — not data processor</li><li>Named owner, documented logic, scheduled refresh</li></ul></div>
+    </div>
+    <div class="card"><div style="font-size:11px;color:var(--slate);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">Positioning statement</div><div style="font-size:13px;color:var(--slate-2);font-style:italic;">"I can take your critical spreadsheets and rebuild the underlying logic properly — so the business process keeps running without the fragility and the key-person risk."</div></div>
+  </div>
+
+  <!-- AI -->
+  <div id="ep-ai" class="ep-panel">
+    <div class="ep-header">
+      <div class="ep-icon">🤖</div>
+      <div>
+        <div class="ep-title">We're being told to use AI</div>
+        <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;"><span class="badge badge-slate">Emerging urgency</span><span class="badge badge-blue">Complexity: Moderate</span></div>
+        <div class="ep-pain">"Leadership wants us using AI tools on our data but when we ask Copilot a question about revenue we get a different number every time."</div>
+      </div>
+    </div>
+    <div class="phases-grid">
+      <div class="phase-card"><div class="phase-num">Phase 01</div><div class="phase-title">Assess Current State</div><ul class="phase-list"><li>Test what AI tools return for 3–5 core business questions</li><li>Identify why answers are inconsistent: model quality, labelling?</li><li>Audit semantic model: measure descriptions, table names</li><li>Assess data quality in the layer AI is querying</li><li>Identify which use cases business actually wants AI to answer</li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 02</div><div class="phase-title">Define Target State</div><ul class="phase-list"><li>Define 5–10 questions AI must answer consistently</li><li>Agree what "AI-ready" means: certified model, documented measures</li><li>Identify pilot use case — narrow scope, high visibility</li><li>Set accuracy benchmark per question</li><li>Agree governance: who validates AI outputs?</li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 03</div><div class="phase-title">Gaps & Bottlenecks</div><ul class="phase-list"><li>Measures have no descriptions — AI can't interpret intent</li><li>Tables named technically, not semantically</li><li>No single certified model — AI queries conflicting sources</li><li>Time intelligence missing — AI can't handle period comparisons</li><li>No validation process for AI outputs</li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 04</div><div class="phase-title">Solution Steps</div><ul class="phase-list"><li>Audit and rename all tables, columns, measures to plain English</li><li>Write measure descriptions for every certified KPI</li><li>Build or remediate time intelligence layer in model</li><li>Connect AI tool to certified model only — not raw data</li><li>Establish validation workflow: spot-check AI outputs</li></ul></div>
+    </div>
+    <div class="two-col">
+      <div class="info-box"><div class="info-box-label warn">⚠ Key bottlenecks</div><ul><li>AI queries ambiguous or unlabelled model objects</li><li>No single certified model — AI picks inconsistent sources</li><li>Time intelligence absent — no period comparisons</li><li>No human validation step for AI outputs</li></ul></div>
+      <div class="info-box"><div class="info-box-label ok">✓ Iterative target state</div><ul><li>All measures described in plain business language</li><li>AI connected exclusively to certified semantic model</li><li>Time intelligence fully operational</li><li>Pilot producing consistent, validated outputs</li></ul></div>
+    </div>
+    <div class="card"><div style="font-size:13px;color:var(--slate-2);font-style:italic;">"Your AI tools are only as good as the data model underneath them. I build the foundation that makes your AI investment actually work — instead of confidently giving you the wrong answer."</div></div>
+  </div>
+
+  <!-- GREENFIELD -->
+  <div id="ep-greenfield" class="ep-panel">
+    <div class="ep-header">
+      <div class="ep-icon">📈</div>
+      <div>
+        <div class="ep-title">No real analytics capability at all</div>
+        <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;"><span class="badge badge-slate">Greenfield opportunity</span><span class="badge badge-red">Complexity: Full Stack</span></div>
+        <div class="ep-pain">"We spend two days before every board meeting manually pulling numbers from three systems. There's no consistency and leadership always challenges the figures."</div>
+      </div>
+    </div>
+    <div class="phases-grid">
+      <div class="phase-card"><div class="phase-num">Phase 01</div><div class="phase-title">Assess Current State</div><ul class="phase-list"><li>Run structured discovery: what questions are asked every week?</li><li>Identify data sources that exist and their accessibility</li><li>Map current reporting process end-to-end</li><li>Identify highest-pain analytical gap</li><li>Assess data literacy: what can users currently read?</li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 02</div><div class="phase-title">Define Target State</div><ul class="phase-list"><li>Prioritise top 10–15 business questions as design brief</li><li>Define minimum viable reporting layer for immediate value</li><li>Sequence iterative delivery: Phase 1 = basics, Phase 2 = diagnosis</li><li>Agree adoption metrics: what does "working" look like in 90 days?</li><li>Define long-term self-service ambition without over-committing</li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 03</div><div class="phase-title">Gaps & Bottlenecks</div><ul class="phase-list"><li>No data extraction layer — no governed access to source data</li><li>No platform chosen — technology decisions blocking delivery</li><li>No metric definitions — nobody has agreed what KPIs mean</li><li>No internal capability — every change requires external support</li><li>No governance — no owner, no refresh, no trust process</li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 04</div><div class="phase-title">Solution Steps</div><ul class="phase-list"><li>Phase 1: Extract top 3 sources, minimal schema, core dashboard</li><li>Phase 2: Add time intelligence, sources, drill-through</li><li>Phase 3: Extend model, enable self-service layer, certify metrics</li><li>Phase 4: Train key users, document model, establish governance</li><li>Each phase produces something usable — not a big-bang project</li></ul></div>
+    </div>
+    <div class="two-col">
+      <div class="info-box"><div class="info-box-label warn">⚠ Key bottlenecks</div><ul><li>No governed access to source data</li><li>No agreed metric definitions to build from</li><li>Risk of "big bang" approach — nothing for 12 months</li><li>No internal capability to maintain what's built</li></ul></div>
+      <div class="info-box"><div class="info-box-label ok">✓ Iterative target state</div><ul><li>Phase 1 live within 4–6 weeks: 3 sources, core KPIs</li><li>Metrics defined and certified before reporting goes live</li><li>Self-service layer operational by Phase 3</li><li>Internal champion identified and enabled</li></ul></div>
+    </div>
+    <div class="card"><div style="font-size:13px;color:var(--slate-2);font-style:italic;">"I can take you from manual spreadsheet chaos to a working analytics layer in a focused engagement — starting with the questions that matter most, not a two-year platform project."</div></div>
+  </div>
+
+  <!-- DOMAIN TEST -->
+  <div id="ep-domain" class="ep-panel">
+    <div class="ep-header">
+      <div class="ep-icon">❓</div>
+      <div>
+        <div class="ep-title">"Do you understand our business?"</div>
+        <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;"><span class="badge badge-slate">Positioning challenge</span><span class="badge badge-amber">Complexity: Diagnostic</span></div>
+        <div class="ep-pain">"We've had IT people build us dashboards before and they never understood what we actually needed. How do you know what a gross margin really means in our context?"</div>
+      </div>
+    </div>
+    <div class="phases-grid">
+      <div class="phase-card"><div class="phase-num">Phase 01</div><div class="phase-title">Assess Their State</div><ul class="phase-list"><li>"Walk me through how you get your key numbers each week"</li><li>"What question do you most wish you could answer but can't?"</li><li>"When was the last time a number was challenged in a meeting?"</li><li>Listen for where the frustration lives, not what they say they want</li><li>Identify the one metric they care most about — diagnostic anchor</li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 02</div><div class="phase-title">Define Target (Together)</div><ul class="phase-list"><li>Reframe from "what report do you want" to "what decision?"</li><li>Establish they own the metric definitions — you translate them</li><li>Agree on 3 questions analytics should answer that currently can't</li><li>Surface the gap between what they have and decision-grade answers</li><li>Don't commit to a solution until the problem is fully understood</li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 03</div><div class="phase-title">Surface Real Gaps</div><ul class="phase-list"><li>Probe the metric: "Is revenue gross or net? Before rebates?"</li><li>Test the data: "Would ERP revenue match your spreadsheet?"</li><li>Test ownership: "Who would you call if the number was wrong?"</li><li>These questions reveal 2–3 structural problems immediately</li><li>Goal: show you ask better questions than they've been asked before</li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 04</div><div class="phase-title">Reposition & Propose</div><ul class="phase-list"><li>Summarise back: "Here is what I heard architecturally"</li><li>Translate findings into one of the other entry point frameworks</li><li>Propose a focused diagnostic engagement — not a full solution</li><li>Output: a shared problem statement, not a quote</li><li>Make explicit: "I need you to teach me your logic"</li></ul></div>
+    </div>
+    <div class="card" style="margin-top:4px;"><div style="font-size:13px;color:var(--slate-2);font-style:italic;">"I'm not the domain expert — you are. My job is to ask the questions that turn your business knowledge into a data model that actually reflects how your business works. That's a different skill from knowing your industry."</div></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     DELIVERY METHODOLOGY
+══════════════════════════════════════════════ -->
+<section id="methodology" class="section">
+  <div class="section-hero">
+    <div class="section-eyebrow">Marcin Duda · Analytics Translator</div>
+    <h2 class="section-title">Four stages, five artefacts,<br>every engagement</h2>
+    <p class="section-lead">The same cadence applies regardless of entry point. The content of each stage differs by complexity. Documentation is built into the rhythm — not deferred to the end. Nothing becomes a black box.</p>
+  </div>
+
+  <div class="block-label">Delivery Cadence</div>
+  <div class="delivery-stages">
+    <div class="delivery-stage">
+      <div class="stage-num">01</div>
+      <div class="stage-title">Discover</div>
+      <div class="stage-timing">1–2 days</div>
+      <div class="stage-desc">Structured conversations using entry-point diagnostic questions. No tools yet — understand the problem, not the solution.</div>
+      <div class="stage-output"><strong>Output</strong>Current state in business language. Top 3 gaps. Target state as answerable questions. Proposed scope.</div>
+    </div>
+    <div class="delivery-stage">
+      <div class="stage-num">02</div>
+      <div class="stage-title">POC</div>
+      <div class="stage-timing">3–5 days</div>
+      <div class="stage-desc">Real but sampled data. Core model skeleton and 1–2 most important KPIs. Clickable prototype for business validation.</div>
+      <div class="stage-output"><strong>Output</strong>Working prototype. First draft Metric Dictionary and Data Map. Business confirms model reflects their logic.</div>
+    </div>
+    <div class="delivery-stage">
+      <div class="stage-num">03</div>
+      <div class="stage-title">Build</div>
+      <div class="stage-timing">1–3 weeks</div>
+      <div class="stage-desc">Full data, complete model, full report structure. Delivered in sub-releases — not a single handover. Model Specification produced.</div>
+      <div class="stage-output"><strong>Output</strong>Production model. Complete report layer. Model Specification. First Handover Guide. Data Product Passport.</div>
+    </div>
+    <div class="delivery-stage">
+      <div class="stage-num">04</div>
+      <div class="stage-title">Embed</div>
+      <div class="stage-timing">Ongoing</div>
+      <div class="stage-desc">Iterative enhancements. Each iteration updates Metric Dictionary and Handover Guide. Governance and documentation evolve with model.</div>
+      <div class="stage-output"><strong>Output</strong>Enhanced model iterations. Updated artefacts. Trained users. Versioned metric changes communicated to consumers.</div>
+    </div>
+  </div>
+
+  <div class="block-label">The Fixed Artefact Set</div>
+  <div class="artefact-grid">
+    <div class="artefact-card">
+      <div class="artefact-num">ARTEFACT 01</div>
+      <div class="artefact-name">Discovery Summary</div>
+      <div class="artefact-when">Produced: end of Discover stage</div>
+      <div class="artefact-desc">One page. Current state in business language — not technical architecture. Top three gaps. Target state as a set of business questions the solution will be able to answer. The scoping contract.</div>
+    </div>
+    <div class="artefact-card">
+      <div class="artefact-num">ARTEFACT 02</div>
+      <div class="artefact-name">Metric Dictionary</div>
+      <div class="artefact-when">Built: POC stage · Maintained: forever</div>
+      <div class="artefact-desc">Plain English name, business definition (words not DAX), origin type (upstream/domain/hybrid), owner, exclusions, date logic, version. Business users write this — you encode it. Eliminates the Finance vs Operations problem.</div>
+    </div>
+    <div class="artefact-card">
+      <div class="artefact-num">ARTEFACT 03</div>
+      <div class="artefact-name">Data Map</div>
+      <div class="artefact-when">Produced: POC · Updated: Build stage</div>
+      <div class="artefact-desc">Business-readable flow from source system through transformation to report surface. Not a technical ERD. Answers "where does this number come from?" without a developer. Anti-black-box document.</div>
+    </div>
+    <div class="artefact-card">
+      <div class="artefact-num">ARTEFACT 04</div>
+      <div class="artefact-name">Model Specification</div>
+      <div class="artefact-when">Produced: start of Build stage</div>
+      <div class="artefact-desc">Translates Metric Dictionary and Data Map into what needs to be built: fact tables, dimensions, key measures, time intelligence requirements, refresh schedule, RLS needs. Technical handoff that a business-literate reader can follow.</div>
+    </div>
+    <div class="artefact-card">
+      <div class="artefact-num">ARTEFACT 05</div>
+      <div class="artefact-name">Handover Guide</div>
+      <div class="artefact-when">Produced: end of every iteration</div>
+      <div class="artefact-desc">One page per report or model component. Answers: "How do I navigate this?", "How do I know the data is current?", "What do I do if something looks wrong?" Replaces implicit knowledge. Updated every iteration.</div>
+    </div>
+    <div class="artefact-card" style="border-top-color:var(--green);">
+      <div class="artefact-num" style="color:var(--green);">ARTEFACT 06 · DATA MESH</div>
+      <div class="artefact-name">Data Product Passport</div>
+      <div class="artefact-when">Produced: Build stage · gate before Embed</div>
+      <div class="artefact-desc">Product name/version, owning domain, covered subject areas, consumption interfaces, refresh SLA, data quality indicators, metric ownership summary, known limitations. Front page of the product in the data catalogue.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     COMMON LAYER
+══════════════════════════════════════════════ -->
+<section id="common" class="section">
+  <div class="section-hero">
+    <div class="section-eyebrow">Marcin Duda · Analytics Translator</div>
+    <h2 class="section-title">Present in every entry point.<br>Complexity varies — the need does not.</h2>
+    <p class="section-lead">Six components appear in every engagement regardless of entry point. The shape, governance formality, and technical depth differ by complexity. The requirement to address them does not disappear.</p>
+  </div>
+
+  <div class="common-grid">
+    <div class="common-card">
+      <div class="common-icon">🧊</div>
+      <div class="common-title">Semantic / Data Model</div>
+      <div class="common-desc">Every solution requires at least a minimal data model — from a single Power BI dataset to a full SSAS Tabular enterprise model. The grain, shape, and governance formality differ; the need does not.</div>
+    </div>
+    <div class="common-card">
+      <div class="common-icon">📐</div>
+      <div class="common-title">Metric Definition</div>
+      <div class="common-desc">Every engagement surfaces at least one metric defined differently in different places. Agreeing and encoding the canonical definition is always a deliverable, regardless of entry point.</div>
+    </div>
+    <div class="common-card">
+      <div class="common-icon">📅</div>
+      <div class="common-title">Date / Time Intelligence</div>
+      <div class="common-desc">A shared, governed date table with consistent period logic (YoY, MTD, rolling) is required in every delivery that produces business reporting. It is almost always missing or inconsistent in the current state.</div>
+    </div>
+    <div class="common-card">
+      <div class="common-icon">🔄</div>
+      <div class="common-title">Refresh & Pipeline</div>
+      <div class="common-desc">Every current state has a data freshness problem — manual, broken, or non-existent automation. The complexity of the fix ranges from a scheduled Power Query refresh to a full ELT pipeline.</div>
+    </div>
+    <div class="common-card">
+      <div class="common-icon">🛡️</div>
+      <div class="common-title">Trust & Governance</div>
+      <div class="common-desc">Users do not trust what they cannot verify. Every delivery must address certification, data lineage visibility, and documented ownership — or adoption will not follow, regardless of technical quality.</div>
+    </div>
+    <div class="common-card">
+      <div class="common-icon">🎓</div>
+      <div class="common-title">User Enablement</div>
+      <div class="common-desc">Handing over a model or dashboard without structured enablement produces low adoption. Every delivery includes at minimum a navigation guide and a short structured handover session.</div>
+    </div>
+  </div>
+
+  <div class="block-label">How Common Layer Complexity Scales by Entry Point</div>
+  <div class="card" style="padding:0;overflow:hidden;">
+    <table class="c-table">
+      <thead>
+        <tr>
+          <th>Component</th>
+          <th>Dashboard</th>
+          <th>Disconnected</th>
+          <th>Spreadsheet</th>
+          <th>AI Ready</th>
+          <th>Greenfield</th>
+          <th>Domain Test</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Data model complexity</td><td><span class="pip pip-lo"></span></td><td><span class="pip pip-hi"></span></td><td><span class="pip pip-mid"></span></td><td><span class="pip pip-mid"></span></td><td><span class="pip pip-hi"></span></td><td><span class="pip pip-empty"></span></td></tr>
+        <tr><td>Pipeline / ETL work</td><td><span class="pip pip-lo"></span></td><td><span class="pip pip-hi"></span></td><td><span class="pip pip-mid"></span></td><td><span class="pip pip-lo"></span></td><td><span class="pip pip-hi"></span></td><td><span class="pip pip-empty"></span></td></tr>
+        <tr><td>Metric definition work</td><td><span class="pip pip-mid"></span></td><td><span class="pip pip-hi"></span></td><td><span class="pip pip-mid"></span></td><td><span class="pip pip-hi"></span></td><td><span class="pip pip-hi"></span></td><td><span class="pip pip-hi"></span></td></tr>
+        <tr><td>Time intelligence</td><td><span class="pip pip-mid"></span></td><td><span class="pip pip-mid"></span></td><td><span class="pip pip-lo"></span></td><td><span class="pip pip-mid"></span></td><td><span class="pip pip-mid"></span></td><td><span class="pip pip-empty"></span></td></tr>
+        <tr><td>Governance formality</td><td><span class="pip pip-mid"></span></td><td><span class="pip pip-hi"></span></td><td><span class="pip pip-mid"></span></td><td><span class="pip pip-mid"></span></td><td><span class="pip pip-hi"></span></td><td><span class="pip pip-empty"></span></td></tr>
+        <tr><td>User enablement</td><td><span class="pip pip-lo"></span></td><td><span class="pip pip-mid"></span></td><td><span class="pip pip-lo"></span></td><td><span class="pip pip-mid"></span></td><td><span class="pip pip-hi"></span></td><td><span class="pip pip-mid"></span></td></tr>
+      </tbody>
+    </table>
+    <div style="padding:10px 14px;font-size:11px;color:var(--slate);border-top:1px solid var(--border);display:flex;gap:16px;">
+      <span><span class="pip pip-lo" style="margin-right:5px;"></span>Targeted</span>
+      <span><span class="pip pip-mid" style="margin-right:5px;"></span>Moderate</span>
+      <span><span class="pip pip-hi" style="margin-right:5px;"></span>Full depth</span>
+      <span><span class="pip pip-empty" style="margin-right:5px;"></span>Diagnostic only</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     METRIC OWNERSHIP
+══════════════════════════════════════════════ -->
+<section id="metrics" class="section">
+  <div class="section-hero">
+    <div class="section-eyebrow">Marcin Duda · Analytics Translator</div>
+    <h2 class="section-title">Not all metrics are<br>owned the same way</h2>
+    <p class="section-lead">The reconciliation path runs in opposite directions depending on metric origin type. Conflating these in documentation is one of the most common causes of the Finance vs Operations problem at the metric level.</p>
+  </div>
+
+  <div class="block-label">The Three Origin Types</div>
+  <div class="metric-types">
+    <div class="metric-type-card upstream">
+      <div class="mt-header"><span class="mt-icon">⬇️</span><span class="mt-label">Upstream-Certified</span></div>
+      <div class="mt-title">Calculated and owned externally</div>
+      <div class="mt-desc">Delivered via a feed or report from a system or function outside this domain. The domain is a <em>consumer</em>, not an owner. Examples: LCR ratio from regulatory system, RWA from credit risk engine, intercompany funding rates from central TMS.</div>
+      <div class="mt-rule">Reconciliation direction: YOUR model → upstream system.<br>If they differ, the upstream is right until proven otherwise.</div>
+    </div>
+    <div class="metric-type-card domain">
+      <div class="mt-header"><span class="mt-icon">🔧</span><span class="mt-label">Domain-Derived</span></div>
+      <div class="mt-title">Defined and calculated within this domain</div>
+      <div class="mt-desc">Built from source field values the domain controls or has direct access to. The domain <em>is</em> the owner. Examples: Net FTP from internal spread calculation, liquidity buffer utilisation from position data, concentration of funding by counterparty.</div>
+      <div class="mt-rule">Reconciliation direction: downstream consumers → YOUR model.<br>This model is the golden source. Defend it with the Metric Dictionary.</div>
+    </div>
+    <div class="metric-type-card hybrid">
+      <div class="mt-header"><span class="mt-icon">⚗️</span><span class="mt-label">Upstream + Domain-Adjusted</span></div>
+      <div class="mt-title">The most dangerous — looks certified but isn't</div>
+      <div class="mt-desc">Starts as an upstream figure but has a local adjustment applied (management overlay, different perimeter, entity exclusion). Consumers assume it matches the upstream — it doesn't, by design. Must be flagged explicitly.</div>
+      <div class="mt-rule">Document both: upstream source AND adjustment logic.<br>State explicitly: "Will not match upstream. Expected variance: [desc]."</div>
+    </div>
+  </div>
+
+  <div class="block-label">Metric Dictionary — Structure & Sample</div>
+  <div class="card" style="padding:0;overflow:hidden;margin-bottom:20px;">
+    <table class="dict-table">
+      <thead>
+        <tr>
+          <th>Metric Name</th>
+          <th>Origin</th>
+          <th>Business Definition</th>
+          <th>Owner / Golden Source</th>
+          <th>Date Logic</th>
+          <th>Exclusions</th>
+          <th>Version</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="metric-name">LCR Ratio</td>
+          <td><span class="origin-tag uc">UPSTREAM</span></td>
+          <td>Liquidity Coverage Ratio as reported by the regulatory system. HQLA ÷ Net Cash Outflows over 30-day stress period.</td>
+          <td>Regulatory Reporting System · Risk function</td>
+          <td>Reporting date (T)</td>
+          <td>None — use as received</td>
+          <td>v1.0</td>
+        </tr>
+        <tr>
+          <td class="metric-name">Net FTP Spread</td>
+          <td><span class="origin-tag dd">DOMAIN</span></td>
+          <td>Difference between the internal transfer price rate assigned to a product and the actual cost of funds for that tenor, expressed in basis points.</td>
+          <td>Treasury Analytics model · Treasury team</td>
+          <td>Trade origination date</td>
+          <td>Excludes intercompany trades flagged IC=Y</td>
+          <td>v2.1</td>
+        </tr>
+        <tr>
+          <td class="metric-name">Liquidity Buffer (Mgmt)</td>
+          <td><span class="origin-tag ha">HYBRID</span></td>
+          <td>Regulatory HQLA pool with management adjustments: excludes pledged assets not available for same-day monetisation and adds uncommitted but operationally available reserves.</td>
+          <td>Base: Regulatory System · Adjustment: Treasury team</td>
+          <td>End of business day</td>
+          <td>Pledged assets, restricted reserves</td>
+          <td>v1.3</td>
+        </tr>
+        <tr>
+          <td class="metric-name">Funding Concentration</td>
+          <td><span class="origin-tag dd">DOMAIN</span></td>
+          <td>Top-10 counterparty funding as % of total wholesale funding. Identifies single-name concentration risk in the funding base.</td>
+          <td>Treasury Analytics model · Treasury team</td>
+          <td>As-at date (snap)</td>
+          <td>Retail deposits excluded; intragroup excluded</td>
+          <td>v1.0</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div style="font-size:13px;font-weight:600;color:var(--white);margin-bottom:10px;">Why this distinction is the anti-black-box mechanism</div>
+    <div style="font-size:13px;color:var(--slate-2);line-height:1.6;">Most BI deliveries treat all numbers as equally opaque — users don't know where they come from, who owns them, or what to do when they're challenged. Making ownership and reconciliation paths visible — and differentiating them by origin type — is the structural mechanism that converts a model from a black box into a governed data product. When a number is challenged in a board meeting, the owner, the golden source, and the reconciliation path are all documented. The conversation moves from "which number is right?" to "which definition are we applying, and why?"</div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     DATA MESH
+══════════════════════════════════════════════ -->
+<section id="datamesh" class="section">
+  <div class="section-hero">
+    <div class="section-eyebrow">Marcin Duda · Analytics Translator</div>
+    <h2 class="section-title">Additive framing,<br>not architectural replacement</h2>
+    <p class="section-lead">Data mesh is an ownership and governance principle, not a technology pattern. The delivery methodology and technical architecture remain intact. What changes is how ownership, interfaces, and governance are framed around them.</p>
+  </div>
+
+  <div class="block-label">Core Data Mesh Principles — How They Map</div>
+  <div class="mesh-principles">
+    <div class="mesh-card">
+      <div class="mesh-card-label">Principle 1</div>
+      <div class="mesh-card-title">Domain Ownership of Data</div>
+      <div class="mesh-card-desc">The domain that best understands the data owns it end-to-end — pipeline, quality, SLAs, and versioning. In the delivery methodology this shifts the Discover question: "Who currently owns the data between source and consumption — and is that the right team?" The answer shapes whether you're enabling a central IT function or a domain-owned product.</div>
+    </div>
+    <div class="mesh-card">
+      <div class="mesh-card-label">Principle 2</div>
+      <div class="mesh-card-title">Data as a Product</div>
+      <div class="mesh-card-desc">Data has a defined interface, named consumers, quality SLAs, and a published specification — just like software. The semantic model is not a BI layer; it is the queryable interface of the data product. The Data Product Passport (Artefact 06) is the published specification. Versioning discipline in the Metric Dictionary makes it behave like a software API.</div>
+    </div>
+    <div class="mesh-card">
+      <div class="mesh-card-label">Principle 3</div>
+      <div class="mesh-card-title">Self-Serve Data Platform</div>
+      <div class="mesh-card-desc">Consumers connect to the product's interface without needing to understand the warehouse underneath. The certified semantic model — with named measures, described dimensions, and documented RLS — is that interface. AI tools connect here too, which is why the AI entry point is directly improved by data mesh discipline.</div>
+    </div>
+    <div class="mesh-card">
+      <div class="mesh-card-label">Principle 4</div>
+      <div class="mesh-card-title">Federated Computational Governance</div>
+      <div class="mesh-card-desc">Global standards, local ownership. The Metric Ownership Model (upstream/domain/hybrid classification) is the governance instrument that makes this operational. Conformed metrics (like a shared date table or agreed entity definitions) are the global standards. Domain-derived metric definitions are local ownership in action.</div>
+    </div>
+  </div>
+
+  <div class="block-label">What Changes in the Methodology — Additive Only</div>
+  <div class="card" style="padding:0;overflow:hidden;margin-bottom:20px;">
+    <table class="change-table">
+      <thead>
+        <tr>
+          <th>Stage / Artefact</th>
+          <th>Change Type</th>
+          <th>What Changes</th>
+          <th>What Stays the Same</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="change-what">Discover stage</td><td><span class="change-scope scope-add">ADD</span></td><td>Add ownership question: "Who owns this data between source and consumption — and is that right?"</td><td>All other diagnostic questions unchanged</td></tr>
+        <tr><td class="change-what">POC stage</td><td><span class="change-scope scope-frame">REFRAME</span></td><td>Mock data / sample data used explicitly as contract validation — does the model produce correct outputs against known inputs?</td><td>POC scope, timing, and deliverable unchanged</td></tr>
+        <tr><td class="change-what">Build stage</td><td><span class="change-scope scope-gate">GATE</span></td><td>Data contract formalised as delivery gate before publishing. Nothing goes to self-service until contract is agreed.</td><td>Build sequence, model architecture unchanged</td></tr>
+        <tr><td class="change-what">Metric Dictionary</td><td><span class="change-scope scope-add">ADD</span></td><td>Version column + "last changed" field on every measure entry. Downstream consumers notified on definition change.</td><td>All existing fields unchanged</td></tr>
+        <tr><td class="change-what">Embed stage</td><td><span class="change-scope scope-frame">REFRAME</span></td><td>Every measure change is a version increment. Consumer notification is part of the iteration process, not optional.</td><td>Iteration cadence, enhancement process unchanged</td></tr>
+        <tr><td class="change-what">Artefact 06 (new)</td><td><span class="change-scope scope-add">ADD</span></td><td>Data Product Passport produced at Build stage. Contains metric ownership summary, consumption interfaces, SLA, known limitations.</td><td>Artefacts 01–05 unchanged in purpose and format</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card" style="border-color:rgba(58,173,122,.25);background:rgba(58,173,122,.04);">
+    <div style="font-size:13px;font-weight:600;color:#6fddb0;margin-bottom:8px;">The Treasury diagram is closer than it appears</div>
+    <div style="font-size:13px;color:var(--slate-2);line-height:1.6;">The Treasury Analytics architecture already has the strongest data mesh signal — Data Contracts in the Docs layer. That is a core data mesh concept: the formal interface between a data producer and its consumers. The ETL pipeline, star schema warehouse, SSAS Tabular semantic model, and multi-modal consumption layer are all architecturally compatible with data mesh. What is needed is framing adjustment — elevating the semantic model from a BI layer to a queryable product interface, and treating data contracts as delivery gates rather than documentation outputs — not architectural replacement.</div>
+  </div>
+</section>
+
+</main>
+
+</div><!-- /.app-body -->
+
+<!-- ── COPYRIGHT FOOTER ── -->
+<footer class="copyright-bar">
+  <div class="copyright-left">
+    <svg class="footer-md-logo" viewBox="0 0 120 120" width="36" height="36" xmlns="http://www.w3.org/2000/svg" aria-label="Marcin Duda logo" role="img">
+      <rect width="120" height="120" rx="18" fill="#0d1b2a"/>
+      <line x1="14" y1="68" x2="108" y2="68" stroke="#1a2e45" stroke-width="0.7"/>
+      <line x1="14" y1="46" x2="108" y2="46" stroke="#1a2e45" stroke-width="0.7"/>
+      <line x1="14" y1="24" x2="108" y2="24" stroke="#1a2e45" stroke-width="0.7"/>
+      <polyline points="16,82 24,76 32,72 40,66 48,62 56,55 64,50 72,44" fill="none" stroke="#4a9fd4" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
+      <polygon points="72,44 80,38 88,31 96,26 104,20 104,32 96,38 88,44 80,48 72,52" fill="#e8a020" opacity="0.10"/>
+      <polyline points="72,44 80,38 88,31 96,26 104,20" fill="none" stroke="#e8a020" stroke-width="0.9" stroke-dasharray="3 2" stroke-linecap="round" opacity="0.55"/>
+      <polyline points="72,52 80,48 88,44 96,38 104,32" fill="none" stroke="#e8a020" stroke-width="0.9" stroke-dasharray="3 2" stroke-linecap="round" opacity="0.35"/>
+      <polyline points="72,48 80,43 88,37 96,32 104,26" fill="none" stroke="#e8a020" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.75"/>
+      <line x1="72" y1="38" x2="72" y2="86" stroke="#e8a020" stroke-width="0.7" stroke-dasharray="2 3" opacity="0.3"/>
+      <line x1="22" y1="58" x2="22" y2="82" stroke="#8fa8c0" stroke-width="0.9" opacity="0.45"/>
+      <rect x="19" y="66" width="6" height="12" rx="1.2" fill="#3aad7a" opacity="0.65"/>
+      <line x1="31" y1="54" x2="31" y2="80" stroke="#8fa8c0" stroke-width="0.9" opacity="0.45"/>
+      <rect x="28" y="62" width="6" height="14" rx="1.2" fill="#e05555" opacity="0.55"/>
+      <line x1="40" y1="44" x2="40" y2="76" stroke="#8fa8c0" stroke-width="0.9" opacity="0.45"/>
+      <rect x="37" y="52" width="6" height="18" rx="1.2" fill="#3aad7a" opacity="0.65"/>
+      <line x1="50" y1="50" x2="50" y2="76" stroke="#8fa8c0" stroke-width="0.9" opacity="0.45"/>
+      <rect x="47" y="58" width="6" height="12" rx="1.2" fill="#e05555" opacity="0.45"/>
+      <line x1="14" y1="10" x2="14" y2="90" stroke="#2a4060" stroke-width="1.2" stroke-linecap="round"/>
+      <line x1="14" y1="90" x2="108" y2="90" stroke="#2a4060" stroke-width="1.2" stroke-linecap="round"/>
+      <circle cx="14" cy="90" r="2.8" fill="#e8a020"/>
+      <path d="M16 88 L16 18 L37 52 L58 18 L58 88" fill="none" stroke="#f5f8fa" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+      <path d="M64 18 L64 88 L76 88 Q106 88 106 53 Q106 18 76 18 Z" fill="none" stroke="#e8a020" stroke-width="3" stroke-linejoin="round"/>
+    </svg>
+    <div>
+      <div class="copyright-name">Marcin Duda <span>· Analytics Translator</span></div>
+      <div class="copyright-notice">
+        © 2026 Marcin Duda. All rights reserved.<br>
+        This framework, its structure, terminology, and content are the intellectual property of Marcin Duda.<br>
+        No part may be reproduced, distributed, or used in derivative works without prior written permission.
+      </div>
+    </div>
+  </div>
+  <div class="copyright-right">
+    <strong>Last-Mile Analytics Framework</strong><br>
+    Entry Point Model · Delivery Methodology · Metric Ownership Model<br>
+    Data Mesh Alignment · Common Layer Architecture<br>
+    <span class="ip-badge">⚿ Proprietary IP · Not for redistribution</span>
+  </div>
+</footer>
+
+</div><!-- /.app -->
+</div>
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  document.querySelector('.main').scrollTop = 0;
+}
+
+function showEP(id, btn) {
+  document.querySelectorAll('.ep-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.ep-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('ep-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>
+
