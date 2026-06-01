@@ -338,11 +338,17 @@ body {
   color: var(--slate-2);
 }
 .c-table td:not(:first-child) { text-align: center; }
-.pip { display: inline-block; width: 9px; height: 9px; border-radius: 50%; }
-.pip-empty { background: var(--navy-4); }
-.pip-lo { background: #EF9F27; }
-.pip-mid { background: #c07010; }
-.pip-hi { background: #854F0B; }
+.pip { display: inline-block; width: 10px; height: 10px; background: var(--amber-2); }
+.pip-lo { border-radius: 50%; }
+.pip-mid { border-radius: 2px; }
+.pip-hi { border-radius: 0; transform: rotate(45deg); }
+.pip-empty {
+  width: 12px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--navy-4);
+  transform: translateY(-1px);
+}
 
 /* ── METRIC OWNERSHIP ── */
 .metric-types { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 32px; }
@@ -619,11 +625,12 @@ body {
 ══════════════════════════════════════════════ -->
 <section id="overview" class="section active">
   <div class="section-hero">
-    <div class="section-eyebrow">Analytics Translator</div>
+    <div class="section-eyebrow">Marcin Duda · Analytics Translator</div>
     <h2 class="section-title">You don't have a data problem.<br>You have a last-mile analytics problem.</h2>
     <p class="section-lead" style="font-size:17px;color:var(--white);font-weight:500;margin-bottom:10px;">I solve that.</p>
     <p class="section-lead">Most organisations have invested heavily in data infrastructure. The pipelines run. The warehouse is populated. The dashboards exist. And yet the business still doesn't trust the numbers, still can't answer the questions that matter, and still runs on spreadsheets, drowning in reconciliations.</p>
-    <p class="section-lead" style="margin-top:10px;">That's not a data problem. That's a last-mile analytics problem: the gap between what your data infrastructure can do and what your business users actually get from it. It's the most consistently under-invested layer in analytics, and it's the space I specialize in.</p>
+    <p class="section-lead" style="margin-top:10px;">That's not a data problem. That's a last-mile analytics problem: the gap between what your data infrastructure can do and what your business users actually get from it. It's the most consistently under-invested layer in analytics.</p>
+    <p class="section-lead" style="margin-top:10px;">It's the space I specialize in.</p>
   </div>
 
   <!-- Identity card -->
@@ -652,35 +659,43 @@ body {
     <div>
       <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--white);margin-bottom:2px;">Marcin Duda</div>
       <div style="font-size:13px;color:var(--amber-2);font-weight:500;margin-bottom:10px;letter-spacing:.02em;">Analytics Translator</div>
-      <div style="font-size:13px;color:var(--slate-2);line-height:1.65;max-width:620px;">Full-stack analytics practitioner specialising in the last mile — the layer between data infrastructure and business users. I build semantic models, design self-service analytics, and make sure the investment in data actually reaches the people who need to make decisions with it.</div>
+      <div style="font-size:13px;color:var(--slate-2);line-height:1.65;max-width:620px;">Full-stack analytics practitioner specialising in semantic models, self-service analytics, and analytics enablement. I work at the intersection of business, data modelling, and decision-making, translating business concepts into trusted analytical products that people can actually use. I help organisations turn fragmented reporting into scalable analytical capability, ensuring it reaches the people who need to make decisions with it.</div>
     </div>
   </div>
 
   <div class="vp-problem">
-    <p>Most organizations have invested heavily in modern data stacks — warehouses, BI platforms, and increasingly, AI tooling. Yet leadership teams still struggle to convert those investments into genuine business capability.</p>
-    <p>The symptoms are familiar: business users exporting data into Excel, rebuilding reports manually, and debating conflicting versions of the same metrics. The underlying problem is rarely the technology itself. It is that the “last mile” between the data and the decision-maker was never fully designed.</p>
-    <p>That gap is becoming even more pronounced as organizations accelerate AI adoption without sufficiently mature data foundations, semantic structures, or shared business definitions to support reliable outcomes.</p>
-    <p>I specialize in delivering that last mile.</p>
-    <p>I bridge the gap between what an organization’s data platform can technically provide and what business users can confidently explore, analyze, and act upon. This is rarely solved by building another dashboard. It is solved through navigable semantic models, intentional analytical design, and enablement strategies that make data understandable, trustworthy, and operationally useful.</p>
-    <p>My focus is turning complex data infrastructure into an intuitive, commercially aligned capability — enabling data to become a reliable operational asset for the people making decisions every day.</p>
+    <p>I specialise in designing the analytical layer that sits between data infrastructure and business decision-making.</p>
+    <p>My work focuses on creating governed semantic models, consistent business definitions, and self-service analytical experiences that allow users to explore data with confidence.</p>
+    <p>Rather than treating analytics as a reporting function, I treat it as an organisational capability. The objective is not simply to deliver dashboards, but to create trusted analytical products that scale across teams, reduce dependency on manual reporting, and support better decision-making.</p>
+    <p>This often involves:</p>
+    <ul style="font-size:14px;color:var(--slate-2);line-height:1.7;margin:6px 0 0 22px;">
+      <li>Defining shared business metrics and terminology</li>
+      <li>Building semantic models and analytical data products</li>
+      <li>Designing decision-support experiences for executives, analysts, and operational teams</li>
+      <li>Expanding self-service analytics capabilities</li>
+      <li>Establishing trust through governance and analytical consistency</li>
+      <li>Preparing data foundations for AI-enabled analytics</li>
+    </ul>
+    <p></p>
+    <p>The goal is straightforward: transform fragmented and dispersed data assets into decision-making capability.</p>
   </div>
 
   <div class="block-label">How I work</div>
   <div class="grid-3">
     <div class="card">
-      <div style="font-size:24px;margin-bottom:10px;">🎯</div>
-      <div style="font-size:13px;font-weight:600;color:var(--white);margin-bottom:6px;">You know the business. I turn that knowledge into analytics.</div>
+      <div style="font-size:24px;margin-bottom:10px;">🧩 → 📊</div>
+      <div style="font-size:13px;font-weight:600;color:var(--amber-2);margin-bottom:6px;">You know the business. I turn that knowledge into analytics.</div>
       <div style="font-size:12px;color:var(--slate-2);line-height:1.55;">You are the domain expert. My job is to ask the questions that turn your business logic into a data model that actually reflects how your business works. That translation is a distinct skill from knowing your industry — and it's the one that's been missing.</div>
     </div>
     <div class="card">
-      <div style="font-size:24px;margin-bottom:10px;">⚡</div>
-      <div style="font-size:13px;font-weight:600;color:var(--white);margin-bottom:6px;">Fast, pragmatic, iterative</div>
+      <div style="font-size:24px;margin-bottom:10px;">⚡→ 🔄</div>
+      <div style="font-size:13px;font-weight:600;color:var(--amber-2);margin-bottom:6px;">Fast, pragmatic, iterative</div>
       <div style="font-size:12px;color:var(--slate-2);line-height:1.55;">Proof of Concept on real sample data first. Working prototype on full data second. Deployment and iterative enhancements third. Every stage produces something usable — no months-long requirements gathering before first value.</div>
     </div>
     <div class="card">
-      <div style="font-size:24px;margin-bottom:10px;">📋</div>
-      <div style="font-size:13px;font-weight:600;color:var(--white);margin-bottom:6px;">Never a black box</div>
-      <div style="font-size:12px;color:var(--slate-2);line-height:1.55;">Documentation is built into the delivery rhythm, not deferred. A fixed, minimal artefact set ensures every solution remains explainable, ownable, and maintainable — by you, not by me.</div>
+      <div style="font-size:24px;margin-bottom:10px;">⬛ → 🛠️</div>
+      <div style="font-size:13px;font-weight:600;color:var(--amber-2);margin-bottom:6px;">Never a black box</div>
+      <div style="font-size:12px;color:var(--slate-2);line-height:1.55;">Documentation is built into the delivery rhythm, not deferred. A fixed, minimal artefact set ensures every solution remains explainable, ownable, and maintainable — by you, not by me. When definitions evolve, you change them. When logic shifts, you drive it. The solution adapts. No middleman required.</div>
     </div>
   </div>
 
@@ -689,19 +704,19 @@ body {
     <div class="card">
       <div style="font-size:12px;color:var(--slate);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">What most BI delivery looks like</div>
       <ul style="list-style:none;font-size:12px;color:var(--slate-2);">
-        <li style="padding:4px 0;border-bottom:1px solid var(--border);">→ Technically correct pipelines nobody navigates</li>
-        <li style="padding:4px 0;border-bottom:1px solid var(--border);">→ Dashboards that only show "what happened"</li>
-        <li style="padding:4px 0;border-bottom:1px solid var(--border);">→ Models named for developers, not business users</li>
-        <li style="padding:4px 0;">→ Delivery without enablement or ownership transfer</li>
+        <li style="padding:4px 0;border-bottom:1px solid var(--border);">→ You got a dashboard, but you're still scrambling for an answer when your MD asks a question on Monday morning.</li>
+        <li style="padding:4px 0;border-bottom:1px solid var(--border);">→ You exported it to Excel. Your colleagues did too. Now there are six versions of the truth.</li>
+        <li style="padding:4px 0;border-bottom:1px solid var(--border);">→ Reports designed around the data, not around the decisions.</li>
+        <li style="padding:4px 0;">→ Success was measured by go-live, not by business adoption.</li>
       </ul>
     </div>
     <div class="card" style="border-color:rgba(232,160,32,.28);background:rgba(232,160,32,.04);">
       <div style="font-size:12px;color:var(--amber);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">What I deliver</div>
       <ul style="list-style:none;font-size:12px;color:var(--slate-2);">
-        <li style="padding:4px 0;border-bottom:1px solid var(--border);">→ Semantic layer designed around business questions</li>
-        <li style="padding:4px 0;border-bottom:1px solid var(--border);">→ KPIs that answer: what happened, why, and what next</li>
-        <li style="padding:4px 0;border-bottom:1px solid var(--border);">→ Metrics with single definitions, single owners</li>
-        <li style="padding:4px 0;">→ Self-service that users actually trust and adopt</li>
+        <li style="padding:4px 0;border-bottom:1px solid var(--border);">→ A semantic layer designed around the questions your business actually asks.</li>
+        <li style="padding:4px 0;border-bottom:1px solid var(--border);">→ One definition. One number. Every tool, every team, every time.</li>
+        <li style="padding:4px 0;border-bottom:1px solid var(--border);">→ KPIs built around how your business thinks - not how the data warehouse is structured.</li>
+        <li style="padding:4px 0;">→ I'm not done when it's built. I'm done when your people are using it.</li>
       </ul>
     </div>
   </div>
@@ -714,16 +729,16 @@ body {
   <div class="section-hero">
     <div class="section-eyebrow">Marcin Duda · Analytics Translator</div>
     <h2 class="section-title">Where does your conversation start?</h2>
-    <p class="section-lead">Business users don't present their problems in analytical terms — they present them as the situation they're in. This framework meets them at their entry point and maps a clear contribution narrative from there. Select the situation that best describes your organisation.</p>
+    <p class="section-lead">Business users don't present their problems in analytical terms — they present them as the situation they're in. This framework meets them at their entry point and maps a clear path forward from there. Select the situation you're dealing with.</p>
   </div>
 
   <div class="ep-tabs">
     <button class="ep-tab active" onclick="showEP('dashboard', this)">📊 Existing Dashboard</button>
     <button class="ep-tab" onclick="showEP('silos', this)">🗄️ Disconnected Data</button>
-    <button class="ep-tab" onclick="showEP('spreadsheets', this)">📑 Spreadsheet Dependency</button>
+    <button class="ep-tab" onclick="showEP('spreadsheets', this)">🧮 Spreadsheet Dependency</button>
     <button class="ep-tab" onclick="showEP('ai', this)">🤖 AI / Copilot Pressure</button>
     <button class="ep-tab" onclick="showEP('greenfield', this)">📈 No Analytics Capability</button>
-    <button class="ep-tab" onclick="showEP('domain', this)">❓ Domain Credibility Test</button>
+    <button class="ep-tab" onclick="showEP('domain', this)">❓ The translation failure</button>
   </div>
 
   <!-- DASHBOARD -->
@@ -741,15 +756,15 @@ body {
     </div>
     <div class="phases-grid">
       <div class="phase-card"><div class="phase-num">Phase 01</div><div class="phase-title">Assess Current State</div><ul class="phase-list"><li>Audit report sources — how many, which systems</li><li>Identify refresh mechanism — manual, scheduled, broken</li><li>Catalogue all metrics: where defined, by whom</li><li>Document who uses it, what decisions it informs</li><li>Score trust level: do users believe the numbers?</li></ul></div>
-      <div class="phase-card"><div class="phase-num">Phase 02</div><div class="phase-title">Define Target State</div><ul class="phase-list"><li>Agree analytical layers: tracking / diagnosis / action</li><li>Define minimum refresh cadence acceptable</li><li>List 5–10 KPIs that must be certified and consistent</li><li>Agree what "trusted" looks like — watermark, lineage</li><li>Sketch report structure before touching the model</li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 02</div><div class="phase-title">Define Target State</div><ul class="phase-list"><li>Agree analytical layers: tracking / diagnosis / action</li><li>Define minimum refresh frequency</li><li>List 5–10 KPIs that must be certified and consistent</li><li>Agree what "trusted" looks like — watermark, lineage</li><li>Sketch report structure before touching the model</li></ul></div>
       <div class="phase-card"><div class="phase-num">Phase 03</div><div class="phase-title">Gaps & Bottlenecks</div><ul class="phase-list"><li>Metric logic lives in report, not shared model</li><li>No time intelligence — only point-in-time snapshots</li><li>Manual data pull blocks refresh frequency</li><li>No single KPI owner → definitions drift</li><li>Report shows status but no drill-to-cause</li></ul></div>
-      <div class="phase-card"><div class="phase-num">Phase 04</div><div class="phase-title">Solution Steps</div><ul class="phase-list"><li>Fix refresh pipeline first — immediate visible win</li><li>Migrate metric logic to certified model layer</li><li>Add time intelligence: YoY, MoM, rolling 12</li><li>Redesign layout: status → diagnosis → action</li><li>Certify model, document measures, add lineage</li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 04</div><div class="phase-title">Solution Steps</div><ul class="phase-list"><li>Automate data flow first: immediate visible win</li><li>Migrate metric logic to certified model layer</li><li>Add time intelligence: YoY, MoM, rolling 12</li><li>Redesign layout: What → So What → Now What</li><li>Certify model, document measures, add lineage</li></ul></div>
     </div>
     <div class="two-col">
-      <div class="info-box"><div class="info-box-label warn">⚠ Key bottlenecks</div><ul><li>Manual refresh creates data staleness</li><li>Metric logic buried in visual-level DAX</li><li>No drill-through — can't go from summary to cause</li><li>Trust deficit from past errors never addressed</li></ul></div>
-      <div class="info-box"><div class="info-box-label ok">✓ Iterative target state</div><ul><li>Automated daily (or more frequent) refresh</li><li>All KPIs defined once in model, not in report</li><li>Three-layer report structure operational</li><li>Certified model with documented owner published</li></ul></div>
+      <div class="info-box"><div class="info-box-label warn">⚠ Key bottlenecks</div><ul><li>Manual refresh creates data staleness</li><li>Metric logic embedded within individual dashboards</li><li>No drill-through — can't go from summary to cause</li><li>Trust deficit from past errors never addressed</li></ul></div>
+      <div class="info-box"><div class="info-box-label ok">✓ Iterative target state</div><ul><li>Automated daily (or more frequent) refresh</li><li>All KPIs defined once in model, not in report</li><li>Three-layer report structure operational</li><li>Certified model with documented ownership</li></ul></div>
     </div>
-    <div class="card"><div style="font-size:11px;color:var(--slate);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">Business questions this unlocks</div><div class="bq-chips"><span class="bq-chip">Why does Finance get a different number than Operations?</span><span class="bq-chip">Can I see this by region, product, and month?</span><span class="bq-chip">What does YoY mean in this context?</span><span class="bq-chip">How do I know this is the right number?</span></div><div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);font-size:13px;color:var(--slate-2);font-style:italic;">"I don't just make your dashboard look better — I make it so your team can trust it, explore it, and act on it without asking IT for a new report every time."</div></div>
+    <div class="card"><div style="font-size:11px;color:var(--slate);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">Business questions this unlocks</div><div class="bq-chips"><span class="bq-chip">Why does Finance get a different number than Business?</span><span class="bq-chip">Can I see this by region, product, and month?</span><span class="bq-chip">What does Revenue mean in this context?</span><span class="bq-chip">How do I know this is the right number?</span></div><div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);font-size:13px;color:var(--slate-2);font-style:italic;">"I don't just make your dashboard look better — I make it so your team can trust it, explore it, and act on it without asking IT for a new report every time."</div></div>
   </div>
 
   <!-- SILOS -->
@@ -763,13 +778,13 @@ body {
       </div>
     </div>
     <div class="phases-grid">
-      <div class="phase-card"><div class="phase-num">Phase 01</div><div class="phase-title">Assess Current State</div><ul class="phase-list"><li>Map all source systems: ERP, CRM, WMS, spreadsheets</li><li>Identify shared entities — customer, product, time</li><li>Document how each team currently joins data</li><li>Identify the most painful reconciliation — anchor it</li><li>Assess data quality per source: completeness, latency</li></ul></div>
-      <div class="phase-card"><div class="phase-num">Phase 02</div><div class="phase-title">Define Target State</div><ul class="phase-list"><li>Define minimum set of conformed dimensions needed</li><li>Agree primary analytical questions integration must answer</li><li>Set data freshness targets per domain</li><li>Identify who owns each entity definition going forward</li><li>Agree on target consumption layer: Power BI, Excel</li></ul></div>
-      <div class="phase-card"><div class="phase-num">Phase 03</div><div class="phase-title">Gaps & Bottlenecks</div><ul class="phase-list"><li>No shared customer/product master across systems</li><li>No integration layer — joins done manually in Excel</li><li>Conflicting grain across sources (daily vs monthly)</li><li>IT controls source access — business can't self-serve</li><li>No agreed date standard across systems</li></ul></div>
-      <div class="phase-card"><div class="phase-num">Phase 04</div><div class="phase-title">Solution Steps</div><ul class="phase-list"><li>Build staging layer: extract each source cleanly</li><li>Design conformed dimensions: customer, product, time</li><li>Build fact tables at agreed grain per subject area</li><li>Develop semantic model — shared KPIs, time intelligence</li><li>Deploy governed self-service with RLS and certified metrics</li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 01</div><div class="phase-title">Assess Current State</div><ul class="phase-list"><li>Map all source systems: ERP, CRM, flat files, spreadsheets</li><li>Identify shared dimensions: customer, product, country</li><li>Document how each team currently joins data</li><li>Identify the most painful reconciliation — anchor it</li><li>Assess data quality per source: completeness, latency</li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 02</div><div class="phase-title">Define Target State</div><ul class="phase-list"><li>Define minimum set of conformed dimensions needed</li><li>Agree primary analytical questions integration must answer</li><li>Set data freshness targets per domain</li><li>Identify who owns each entity definition going forward</li><li>Agree on target consumption layer: Power BI, Excel, Custom UI</li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 03</div><div class="phase-title">Gaps & Bottlenecks</div><ul class="phase-list"><li>No shared reference data/dimensions across systems</li><li>No integration layer — joins done manually in Excel</li><li>Conflicting grain across sources</li><li>IT controls source access — business can't self-serve</li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 04</div><div class="phase-title">Solution Steps</div><ul class="phase-list"><li>Build staging layer: extract each source cleanly</li><li>Design conformed dimensions: customer, product, time</li><li>Build fact tables at agreed grain per subject area</li><li>Develop semantic model, shared KPIs, time intelligence</li><li>Deploy governed self-service with RLS and certified metrics</li></ul></div>
     </div>
     <div class="two-col">
-      <div class="info-box"><div class="info-box-label warn">⚠ Key bottlenecks</div><ul><li>No shared entity definitions across systems</li><li>Manual join process = reconciliation meetings</li><li>Different date semantics across source systems</li><li>No governed access path for business users</li></ul></div>
+      <div class="info-box"><div class="info-box-label warn">⚠ Key bottlenecks</div><ul><li>No shared entity definitions across systems</li><li>Manual join process = reconciliations factory</li><li>Different data granularity across source systems</li><li>No governed access path for business users</li></ul></div>
       <div class="info-box"><div class="info-box-label ok">✓ Iterative target state</div><ul><li>Single version of every shared entity</li><li>Automated integration pipeline with documented lineage</li><li>Business users self-serve from one certified model</li><li>Reconciliation meetings eliminated for covered domains</li></ul></div>
     </div>
     <div class="card"><div style="font-size:11px;color:var(--slate);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">Business questions this unlocks</div><div class="bq-chips"><span class="bq-chip">Why does my revenue not match Finance?</span><span class="bq-chip">Can we combine CRM pipeline with ERP actuals?</span><span class="bq-chip">Who owns the customer dimension?</span><span class="bq-chip">How do we stop data living in five places?</span></div><div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);font-size:13px;color:var(--slate-2);font-style:italic;">"I can take your scattered data landscape and build a single connected model every function pulls from — so reconciliation meetings become unnecessary."</div></div>
@@ -778,7 +793,7 @@ body {
   <!-- SPREADSHEETS -->
   <div id="ep-spreadsheets" class="ep-panel">
     <div class="ep-header">
-      <div class="ep-icon">📑</div>
+      <div class="ep-icon">🧮</div>
       <div>
         <div class="ep-title">Everything runs on spreadsheets</div>
         <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;"><span class="badge badge-slate">Governance entry</span><span class="badge badge-blue">Complexity: Moderate</span></div>
@@ -786,10 +801,10 @@ body {
       </div>
     </div>
     <div class="phases-grid">
-      <div class="phase-card"><div class="phase-num">Phase 01</div><div class="phase-title">Assess Current State</div><ul class="phase-list"><li>Identify the 3–5 most business-critical spreadsheets</li><li>Map data inputs: where does each spreadsheet get data?</li><li>Document the logic: calculations, allocations, filters</li><li>Identify single point of failure: who maintains it?</li><li>Assess downstream use: what decisions does it feed?</li></ul></div>
-      <div class="phase-card"><div class="phase-num">Phase 02</div><div class="phase-title">Define Target State</div><ul class="phase-list"><li>Agree which processes must be automated first</li><li>Define acceptable refresh cadence per process</li><li>Identify what logic belongs in model vs spreadsheet</li><li>Agree governance: documentation, ownership, version control</li><li>Define what "safe" looks like — who can change it?</li></ul></div>
-      <div class="phase-card"><div class="phase-num">Phase 03</div><div class="phase-title">Gaps & Bottlenecks</div><ul class="phase-list"><li>Data acquisition is manual — human is the bottleneck</li><li>Logic undocumented — one person holds it in their head</li><li>No version control — changes invisible and irreversible</li><li>Spreadsheet used as both ETL and reporting tool</li><li>No data quality check before spreadsheet runs</li></ul></div>
-      <div class="phase-card"><div class="phase-num">Phase 04</div><div class="phase-title">Solution Steps</div><ul class="phase-list"><li>Replace manual pulls with Power Query / pipeline</li><li>Document and test all existing logic first</li><li>Migrate metric calculations to shared model layer</li><li>Retain Excel as governed consumption tool, not data owner</li><li>Add version control, refresh schedule, named owner</li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 01</div><div class="phase-title">Assess Current State</div><ul class="phase-list"><li>Identify the 3–5 most business-critical spreadsheets</li><li>Map data inputs: where does each spreadsheet get data from?</li><li>Document the logic: calculations, allocations, filters</li><li>Identify maintenance responsibility: who owns and supports it?</li><li>Assess downstream use: what decisions does it feed?</li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 02</div><div class="phase-title">Define Target State</div><ul class="phase-list"><li>Agree which processes must be automated first</li><li>Define acceptable refresh cadence per process</li><li>Identify what logic belongs in model vs spreadsheet</li><li>Agree governance: documentation, ownership, version control</li><li>Define change controls: who can make changes and how are they approved?</li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 03</div><div class="phase-title">Gaps & Bottlenecks</div><ul class="phase-list"><li>Data acquisition is manual — human is the bottleneck</li><li>Critical logic lacks transparency and traceability</li><li>No version control — changes invisible and irreversible</li><li>Spreadsheet used as both ETL and reporting tool</li><li>No data quality check before spreadsheet runs</li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 04</div><div class="phase-title">Solution Steps</div><ul class="phase-list"><li>Replace manual pulls with Power Query / pipeline</li><li>Document and test all existing logic first</li><li>Migrate metric calculations to shared model layer</li><li>Retain Excel as a controlled consumption layer, not a logic owner</li><li>Add version control, refresh schedule, named owner</li></ul></div>
     </div>
     <div class="two-col">
       <div class="info-box"><div class="info-box-label warn">⚠ Key bottlenecks</div><ul><li>Single person dependency on every critical file</li><li>No automated data connection — all manual copy-paste</li><li>Logic embedded in formulas nobody else understands</li><li>No change control — errors introduced silently</li></ul></div>
@@ -805,20 +820,20 @@ body {
       <div>
         <div class="ep-title">We're being told to use AI</div>
         <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;"><span class="badge badge-slate">Emerging urgency</span><span class="badge badge-blue">Complexity: Moderate</span></div>
-        <div class="ep-pain">"Leadership wants us using AI tools on our data but when we ask Copilot a question about revenue we get a different number every time."</div>
+        <div class="ep-pain">"Leadership wants us to use AI tools on our data but when we ask Copilot a question about revenue we get a different number every time."</div>
       </div>
     </div>
     <div class="phases-grid">
       <div class="phase-card"><div class="phase-num">Phase 01</div><div class="phase-title">Assess Current State</div><ul class="phase-list"><li>Test what AI tools return for 3–5 core business questions</li><li>Identify why answers are inconsistent: model quality, labelling?</li><li>Audit semantic model: measure descriptions, table names</li><li>Assess data quality in the layer AI is querying</li><li>Identify which use cases business actually wants AI to answer</li></ul></div>
       <div class="phase-card"><div class="phase-num">Phase 02</div><div class="phase-title">Define Target State</div><ul class="phase-list"><li>Define 5–10 questions AI must answer consistently</li><li>Agree what "AI-ready" means: certified model, documented measures</li><li>Identify pilot use case — narrow scope, high visibility</li><li>Set accuracy benchmark per question</li><li>Agree governance: who validates AI outputs?</li></ul></div>
-      <div class="phase-card"><div class="phase-num">Phase 03</div><div class="phase-title">Gaps & Bottlenecks</div><ul class="phase-list"><li>Measures have no descriptions — AI can't interpret intent</li><li>Tables named technically, not semantically</li><li>No single certified model — AI queries conflicting sources</li><li>Time intelligence missing — AI can't handle period comparisons</li><li>No validation process for AI outputs</li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 03</div><div class="phase-title">Gaps & Bottlenecks</div><ul class="phase-list"><li>Measures have no descriptions — AI can't interpret intent</li><li>Tables named technically, not semantically</li><li>No single certified model: AI queries conflicting sources</li><li>Time intelligence missing: AI can't handle period comparisons</li><li>No validation process for AI outputs</li></ul></div>
       <div class="phase-card"><div class="phase-num">Phase 04</div><div class="phase-title">Solution Steps</div><ul class="phase-list"><li>Audit and rename all tables, columns, measures to plain English</li><li>Write measure descriptions for every certified KPI</li><li>Build or remediate time intelligence layer in model</li><li>Connect AI tool to certified model only — not raw data</li><li>Establish validation workflow: spot-check AI outputs</li></ul></div>
     </div>
     <div class="two-col">
       <div class="info-box"><div class="info-box-label warn">⚠ Key bottlenecks</div><ul><li>AI queries ambiguous or unlabelled model objects</li><li>No single certified model — AI picks inconsistent sources</li><li>Time intelligence absent — no period comparisons</li><li>No human validation step for AI outputs</li></ul></div>
       <div class="info-box"><div class="info-box-label ok">✓ Iterative target state</div><ul><li>All measures described in plain business language</li><li>AI connected exclusively to certified semantic model</li><li>Time intelligence fully operational</li><li>Pilot producing consistent, validated outputs</li></ul></div>
     </div>
-    <div class="card"><div style="font-size:13px;color:var(--slate-2);font-style:italic;">"Your AI tools are only as good as the data model underneath them. I build the foundation that makes your AI investment actually work — instead of confidently giving you the wrong answer."</div></div>
+    <div class="card"><div style="font-size:13px;color:var(--slate-2);font-style:italic;">"Your AI tools are only as good as the data model underneath them. I build the foundation that makes your AI investment actually work - instead of confidently giving you the wrong answer."</div></div>
   </div>
 
   <!-- GREENFIELD -->
@@ -832,10 +847,10 @@ body {
       </div>
     </div>
     <div class="phases-grid">
-      <div class="phase-card"><div class="phase-num">Phase 01</div><div class="phase-title">Assess Current State</div><ul class="phase-list"><li>Run structured discovery: what questions are asked every week?</li><li>Identify data sources that exist and their accessibility</li><li>Map current reporting process end-to-end</li><li>Identify highest-pain analytical gap</li><li>Assess data literacy: what can users currently read?</li></ul></div>
-      <div class="phase-card"><div class="phase-num">Phase 02</div><div class="phase-title">Define Target State</div><ul class="phase-list"><li>Prioritise top 10–15 business questions as design brief</li><li>Define minimum viable reporting layer for immediate value</li><li>Sequence iterative delivery: Phase 1 = basics, Phase 2 = diagnosis</li><li>Agree adoption metrics: what does "working" look like in 90 days?</li><li>Define long-term self-service ambition without over-committing</li></ul></div>
-      <div class="phase-card"><div class="phase-num">Phase 03</div><div class="phase-title">Gaps & Bottlenecks</div><ul class="phase-list"><li>No data extraction layer — no governed access to source data</li><li>No platform chosen — technology decisions blocking delivery</li><li>No metric definitions — nobody has agreed what KPIs mean</li><li>No internal capability — every change requires external support</li><li>No governance — no owner, no refresh, no trust process</li></ul></div>
-      <div class="phase-card"><div class="phase-num">Phase 04</div><div class="phase-title">Solution Steps</div><ul class="phase-list"><li>Phase 1: Extract top 3 sources, minimal schema, core dashboard</li><li>Phase 2: Add time intelligence, sources, drill-through</li><li>Phase 3: Extend model, enable self-service layer, certify metrics</li><li>Phase 4: Train key users, document model, establish governance</li><li>Each phase produces something usable — not a big-bang project</li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 01</div><div class="phase-title">Assess Current State</div><ul class="phase-list"><li>Run structured discovery: what questions are asked every week?</li><li>Identify data sources that exist and their accessibility</li><li>Map current reporting process end-to-end</li><li>Identify highest-pain analytical gap</li><li>Assess analytical competency: what tools users can use comfortably?</li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 02</div><div class="phase-title">Define Target State</div><ul class="phase-list"><li>Prioritise top 10–15 business questions as design brief</li><li>Define minimum viable reporting layer for immediate value</li><li>Sequence iterative delivery</li><li>Set clear success metrics (adoption, usage, decision impact)</li><li>Define the end-state self-service vision, with explicit scope boundaries</li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 03</div><div class="phase-title">Gaps & Bottlenecks</div><ul class="phase-list"><li>No data extraction layer: no governed access to source data</li><li>No platform chosen: technology decisions blocking delivery</li><li>No metric definitions: nobody has agreed what KPIs mean</li><li>No internal capability: every change requires external support</li><li>No governance: no owner, no refresh, no trust process</li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 04</div><div class="phase-title">Solution Steps</div><ul class="phase-list"><li>Phase 1: Extract top 3 sources, minimal schema, core dashboard</li><li>Phase 2: Add time intelligence, dimensions, hierarchies</li><li>Phase 3: Extend model, enable self-service layer, certify metrics</li><li>Phase 4: Train key users, document model, establish governance</li><li>Each phase produces something usable — not a big-bang project</li></ul></div>
     </div>
     <div class="two-col">
       <div class="info-box"><div class="info-box-label warn">⚠ Key bottlenecks</div><ul><li>No governed access to source data</li><li>No agreed metric definitions to build from</li><li>Risk of "big bang" approach — nothing for 12 months</li><li>No internal capability to maintain what's built</li></ul></div>
@@ -849,16 +864,36 @@ body {
     <div class="ep-header">
       <div class="ep-icon">❓</div>
       <div>
-        <div class="ep-title">"Do you understand our business?"</div>
-        <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;"><span class="badge badge-slate">Positioning challenge</span><span class="badge badge-amber">Complexity: Diagnostic</span></div>
-        <div class="ep-pain">"We've had IT people build us dashboards before and they never understood what we actually needed. How do you know what a gross margin really means in our context?"</div>
+        <div class="ep-title">"The last team built what they thought we needed. It wasn't."</div>
+        <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;"><span class="badge badge-slate">Business-IT disconnect</span><span class="badge badge-amber">Complexity: Diagnostic</span></div>
+        <div class="ep-pain">"Our last dashboard looked great in the demo. Three months after go-live, everyone was back in Excel. The business never trusted the numbers enough to stop checking them manually. We don't have the appetite to go through that again.</div>
       </div>
     </div>
     <div class="phases-grid">
-      <div class="phase-card"><div class="phase-num">Phase 01</div><div class="phase-title">Assess Their State</div><ul class="phase-list"><li>"Walk me through how you get your key numbers each week"</li><li>"What question do you most wish you could answer but can't?"</li><li>"When was the last time a number was challenged in a meeting?"</li><li>Listen for where the frustration lives, not what they say they want</li><li>Identify the one metric they care most about — diagnostic anchor</li></ul></div>
-      <div class="phase-card"><div class="phase-num">Phase 02</div><div class="phase-title">Define Target (Together)</div><ul class="phase-list"><li>Reframe from "what report do you want" to "what decision?"</li><li>Establish they own the metric definitions — you translate them</li><li>Agree on 3 questions analytics should answer that currently can't</li><li>Surface the gap between what they have and decision-grade answers</li><li>Don't commit to a solution until the problem is fully understood</li></ul></div>
-      <div class="phase-card"><div class="phase-num">Phase 03</div><div class="phase-title">Surface Real Gaps</div><ul class="phase-list"><li>Probe the metric: "Is revenue gross or net? Before rebates?"</li><li>Test the data: "Would ERP revenue match your spreadsheet?"</li><li>Test ownership: "Who would you call if the number was wrong?"</li><li>These questions reveal 2–3 structural problems immediately</li><li>Goal: show you ask better questions than they've been asked before</li></ul></div>
-      <div class="phase-card"><div class="phase-num">Phase 04</div><div class="phase-title">Reposition & Propose</div><ul class="phase-list"><li>Summarise back: "Here is what I heard architecturally"</li><li>Translate findings into one of the other entry point frameworks</li><li>Propose a focused diagnostic engagement — not a full solution</li><li>Output: a shared problem statement, not a quote</li><li>Make explicit: "I need you to teach me your logic"</li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 01</div><div class="phase-title">Assess Their State</div><ul class="phase-list"><li>"Walk me through how you get your key numbers each week"</li><li>"What question do you most wish you could answer but can't?"</li><li>"When was the last time a number was challenged in a meeting?"</li><li>Check whether insights lead to clear action, not just explanation</li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 02</div><div class="phase-title">Define Target (Together)</div><ul class="phase-list"><li>Reframe from "what report do you want" to "what decision?"</li><li>Establish they own the metric definitions — you translate them</li><li>Agree on 3 questions analytics should answer that currently can't</li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 03</div><div class="phase-title">Surface Real Gaps</div><ul class="phase-list"><li>Probe the metric: "Is revenue gross or net? Before rebates?"</li><li>Test the data: "Would ERP revenue match your spreadsheet?"</li><li>Test ownership: "Who would you call if the number was wrong?"</li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 04</div><div class="phase-title">Reposition & Propose</div><ul class="phase-list"><li>Translate findings into one of the other entry point frameworks</li><li>Propose a focused diagnostic engagement — not a full solution</li><li>Output: a shared problem statement, not a quote</li><li>Make explicit: "You own the business rules, I own the translation"</li></ul></div>
+    </div>
+    <div class="two-col">
+      <div class="info-box">
+        <div class="info-box-label warn">⚠ Key bottlenecks</div>
+        <ul>
+          <li>The people who defined the requirements weren't the people who felt the problem - so the brief was wrong before the build started</li>
+          <li>Everyone described their piece of the process, nobody described the whole - leaving the biggest inefficiencies invisible and unaddressed</li>
+          <li>The build fixed what was asked for, not what was actually broken - and what was actually broken was often one step upstream or downstream</li>
+          <li>Developers optimised the current state rather than questioning whether the current state was worth keeping</li>
+        </ul>
+      </div>
+      <div class="info-box">
+        <div class="info-box-label ok">✓ Iterative target state</div>
+        <ul>
+          <li>Requirements gathered across the full stakeholder map - not just the loudest voice in the room - so the brief reflects the actual problem, not the presented one</li>
+          <li>End-to-end process walkthrough before any build begins - because the highest-value improvement is rarely where the conversation started</li>
+          <li>Every request assessed against the full workflow: what feeds it, what follows it, and what breaks if it changes</li>
+          <li>Current state treated as a reference point, not a starting point - the question is always what the business needs, not what the system already does</li>
+        </ul>
+      </div>
     </div>
     <div class="card" style="margin-top:4px;"><div style="font-size:13px;color:var(--slate-2);font-style:italic;">"I'm not the domain expert — you are. My job is to ask the questions that turn your business knowledge into a data model that actually reflects how your business works. That's a different skill from knowing your industry."</div></div>
   </div>
@@ -870,7 +905,7 @@ body {
 <section id="methodology" class="section">
   <div class="section-hero">
     <div class="section-eyebrow">Marcin Duda · Analytics Translator</div>
-    <h2 class="section-title">Four stages, five artefacts,<br>every engagement</h2>
+    <h2 class="section-title">Four stages, six artefacts, every engagement</h2>
     <p class="section-lead">The same cadence applies regardless of entry point. The content of each stage differs by complexity. Documentation is built into the rhythm — not deferred to the end. Nothing becomes a black box.</p>
   </div>
 
@@ -879,29 +914,29 @@ body {
     <div class="delivery-stage">
       <div class="stage-num">01</div>
       <div class="stage-title">Discover</div>
-      <div class="stage-timing">1–2 days</div>
+      <div class="stage-timing">1–5 days</div>
       <div class="stage-desc">Structured conversations using entry-point diagnostic questions. No tools yet — understand the problem, not the solution.</div>
       <div class="stage-output"><strong>Output</strong>Current state in business language. Top 3 gaps. Target state as answerable questions. Proposed scope.</div>
     </div>
     <div class="delivery-stage">
       <div class="stage-num">02</div>
       <div class="stage-title">POC</div>
-      <div class="stage-timing">3–5 days</div>
+      <div class="stage-timing">1–2 weeks</div>
       <div class="stage-desc">Real but sampled data. Core model skeleton and 1–2 most important KPIs. Clickable prototype for business validation.</div>
       <div class="stage-output"><strong>Output</strong>Working prototype. First draft Metric Dictionary and Data Map. Business confirms model reflects their logic.</div>
     </div>
     <div class="delivery-stage">
       <div class="stage-num">03</div>
       <div class="stage-title">Build</div>
-      <div class="stage-timing">1–3 weeks</div>
-      <div class="stage-desc">Full data, complete model, full report structure. Delivered in sub-releases — not a single handover. Model Specification produced.</div>
-      <div class="stage-output"><strong>Output</strong>Production model. Complete report layer. Model Specification. First Handover Guide. Data Product Passport.</div>
+      <div class="stage-timing">1–8 weeks</div>
+      <div class="stage-desc">Full data, complete model, key reports. Delivered in sub-releases — not a single handover. Model Specification produced.</div>
+      <div class="stage-output"><strong>Output</strong>Production model. Complete reporting layer. Model Specification. First Handover Guide. Data Product Passport.</div>
     </div>
     <div class="delivery-stage">
       <div class="stage-num">04</div>
       <div class="stage-title">Embed</div>
       <div class="stage-timing">Ongoing</div>
-      <div class="stage-desc">Iterative enhancements. Each iteration updates Metric Dictionary and Handover Guide. Governance and documentation evolve with model.</div>
+      <div class="stage-desc">Iterative enhancements. Additional reports and analytical capabilities. Documentation evolves with model.</div>
       <div class="stage-output"><strong>Output</strong>Enhanced model iterations. Updated artefacts. Trained users. Versioned metric changes communicated to consumers.</div>
     </div>
   </div>
@@ -918,7 +953,7 @@ body {
       <div class="artefact-num">ARTEFACT 02</div>
       <div class="artefact-name">Metric Dictionary</div>
       <div class="artefact-when">Built: POC stage · Maintained: forever</div>
-      <div class="artefact-desc">Plain English name, business definition (words not DAX), origin type (upstream/domain/hybrid), owner, exclusions, date logic, version. Business users write this — you encode it. Eliminates the Finance vs Operations problem.</div>
+      <div class="artefact-desc">Plain English name, business definition (words not DAX), origin type (upstream/domain/hybrid), owner, exclusions, date logic, version. Business users cerify this. Eliminates the Finance vs Operations problem.</div>
     </div>
     <div class="artefact-card">
       <div class="artefact-num">ARTEFACT 03</div>
@@ -1001,7 +1036,7 @@ body {
           <th>Spreadsheet</th>
           <th>AI Ready</th>
           <th>Greenfield</th>
-          <th>Domain Test</th>
+          <th>Translation</th>
         </tr>
       </thead>
       <tbody>
@@ -1169,11 +1204,6 @@ body {
         <tr><td class="change-what">Artefact 06 (new)</td><td><span class="change-scope scope-add">ADD</span></td><td>Data Product Passport produced at Build stage. Contains metric ownership summary, consumption interfaces, SLA, known limitations.</td><td>Artefacts 01–05 unchanged in purpose and format</td></tr>
       </tbody>
     </table>
-  </div>
-
-  <div class="card" style="border-color:rgba(58,173,122,.25);background:rgba(58,173,122,.04);">
-    <div style="font-size:13px;font-weight:600;color:#6fddb0;margin-bottom:8px;">The Treasury diagram is closer than it appears</div>
-    <div style="font-size:13px;color:var(--slate-2);line-height:1.6;">The Treasury Analytics architecture already has the strongest data mesh signal — Data Contracts in the Docs layer. That is a core data mesh concept: the formal interface between a data producer and its consumers. The ETL pipeline, star schema warehouse, SSAS Tabular semantic model, and multi-modal consumption layer are all architecturally compatible with data mesh. What is needed is framing adjustment — elevating the semantic model from a BI layer to a queryable product interface, and treating data contracts as delivery gates rather than documentation outputs — not architectural replacement.</div>
   </div>
 </section>
 
