@@ -1,0 +1,1554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marcin Duda · Analytics Translator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0d1b2a;
+  --navy-2: #152336;
+  --navy-3: #1e3048;
+  --navy-4: #2a4060;
+  --slate: #8fa8c0;
+  --slate-2: #b8cdd9;
+  --slate-3: #dde8f0;
+  --amber: #e8a020;
+  --amber-2: #f0c060;
+  --amber-3: #fdf0d0;
+  --white: #f5f8fa;
+  --green: #3aad7a;
+  --green-bg: #0d2a1e;
+  --red: #e05555;
+  --red-bg: #2a1010;
+  --blue: #4a9fd4;
+  --blue-bg: #0a1e30;
+  --border: rgba(143,168,192,0.18);
+  --border-strong: rgba(143,168,192,0.32);
+  --radius: 10px;
+  --radius-sm: 6px;
+  --shadow: 0 2px 16px rgba(0,0,0,0.28);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.38);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: #080f18;
+  color: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ── LAYOUT ── */
+.app {
+  display: flex; flex-direction: column;
+  min-height: 100vh;
+  max-width: 1680px;
+  margin: 0 auto;
+  background: var(--navy);
+  box-shadow: 0 0 80px rgba(0,0,0,0.6);
+}
+.app-body { display: flex; flex: 1; min-height: 0; }
+.sidebar {
+  width: 285px; flex-shrink: 0;
+  background: var(--navy-2);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  position: sticky; top: 0; height: 100vh;
+  overflow-y: auto;
+}
+.main { flex: 1; overflow-x: hidden; min-width: 0; background: var(--navy); }
+
+/* ── SIDEBAR ── */
+.sidebar-logo {
+  padding: 28px 24px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.sidebar-logo .md-logo {
+  width: 80px;
+  height: 80px;
+  display: block;
+  margin-bottom: 12px;
+}
+.sidebar-logo h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px; font-weight: 600;
+  color: var(--white); line-height: 1.3;
+}
+.sidebar-logo p { font-size: 11px; color: var(--slate); margin-top: 3px; }
+
+.nav-section { padding: 18px 16px 4px; }
+.nav-section-label {
+  font-size: 10px; font-weight: 600; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--slate);
+  padding: 0 8px; margin-bottom: 6px;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 12px; border-radius: var(--radius-sm);
+  cursor: pointer; transition: all .18s;
+  color: var(--slate-2); font-size: 13px; font-weight: 400;
+  border: 1px solid transparent;
+  text-decoration: none; user-select: none;
+}
+.nav-item:hover { background: var(--navy-3); color: var(--white); }
+.nav-item.active {
+  background: rgba(232,160,32,0.12);
+  border-color: rgba(232,160,32,0.28);
+  color: var(--amber-2);
+}
+.nav-item .icon { font-size: 15px; flex-shrink: 0; opacity: .8; }
+.nav-dot {
+  width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+  background: var(--border-strong);
+}
+.nav-item.active .nav-dot { background: var(--amber); }
+
+.sidebar-footer {
+  margin-top: auto; padding: 16px 20px;
+  border-top: 1px solid var(--border);
+  font-size: 11px; color: var(--slate);
+}
+
+/* ── SECTIONS ── */
+.section { display: none; padding: 40px 44px; max-width: 1400px; }
+.section.active { display: block; }
+
+.section-hero {
+  margin-bottom: 36px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--border);
+}
+.section-eyebrow {
+  font-size: 11px; font-weight: 600; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--amber);
+  margin-bottom: 10px;
+}
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px; font-weight: 700; line-height: 1.2;
+  color: var(--white); margin-bottom: 12px;
+}
+.section-lead {
+  font-size: 15px; color: var(--slate-2); line-height: 1.7;
+  max-width: 680px;
+}
+
+/* ── CARDS & GRIDS ── */
+.card {
+  background: var(--navy-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  transition: border-color .18s;
+}
+.card:hover { border-color: var(--border-strong); }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+
+/* ── TAGS / BADGES ── */
+.badge {
+  display: inline-flex; align-items: center;
+  font-size: 11px; font-weight: 500; letter-spacing: .03em;
+  padding: 3px 10px; border-radius: 999px;
+}
+.badge-amber { background: rgba(232,160,32,.15); color: var(--amber-2); border: 1px solid rgba(232,160,32,.3); }
+.badge-green { background: rgba(58,173,122,.15); color: #6fddb0; border: 1px solid rgba(58,173,122,.3); }
+.badge-blue { background: rgba(74,159,212,.15); color: #7ec8e8; border: 1px solid rgba(74,159,212,.3); }
+.badge-slate { background: rgba(143,168,192,.1); color: var(--slate-2); border: 1px solid var(--border); }
+.badge-red { background: rgba(224,85,85,.15); color: #f09090; border: 1px solid rgba(224,85,85,.3); }
+
+/* ── ENTRY POINT TABS ── */
+.ep-tabs {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
+  margin-bottom: 24px;
+  overflow-x: hidden;
+}
+.ep-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 10px; border-radius: 999px; cursor: pointer;
+  font-size: 12px; font-weight: 500; transition: all .18s;
+  border: 1px solid var(--border); color: var(--slate-2);
+  background: transparent;
+}
+.ep-tab-icon {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+.ep-tab-icon-sm {
+  width: 16px;
+  height: 16px;
+}
+.ep-tab-label {
+  display: inline-block;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+.ep-tab-ai {
+  min-width: 0;
+}
+.ep-tab-domain {
+  min-width: 0;
+}
+.ep-tab:hover { border-color: var(--border-strong); color: var(--white); }
+.ep-tab.active {
+  background: rgba(232,160,32,.14);
+  border-color: rgba(232,160,32,.4);
+  color: var(--amber-2);
+}
+
+.ep-panel { display: none; }
+.ep-panel.active { display: block; }
+
+.translation-toggle {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 18px;
+}
+.translation-label {
+  font-size: 11px; font-weight: 600; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--slate);
+}
+.translation-segment {
+  display: inline-flex; align-items: center;
+  background: var(--navy-2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 3px;
+  gap: 4px;
+}
+.translation-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--slate-2);
+  background: transparent;
+  cursor: pointer;
+  transition: all .18s;
+}
+.translation-btn:hover { color: var(--white); }
+.translation-btn.active {
+  background: rgba(232,160,32,.14);
+  color: var(--amber-2);
+}
+
+.text-business { display: none; }
+body[data-translation-mode="business"] .text-business { display: inline; }
+body[data-translation-mode="business"] .text-analytics { display: none; }
+.text-analytics strong { color: var(--amber); }
+
+/* Existing Dashboard analytics rows: fixed to roughly 8 text lines each. */
+body[data-translation-mode="analytics"] #ep-dashboard .phase-list li {
+  display: flex;
+  align-items: flex-start;
+  min-height: calc(8 * 1.45em);
+}
+
+/* Existing Dashboard business rows: fixed to roughly 5 text lines each. */
+body[data-translation-mode="business"] #ep-dashboard .phase-list li {
+  display: flex;
+  align-items: flex-start;
+  min-height: calc(5 * 1.45em);
+}
+
+/* Entry Point 2 (Silos) analytics rows: fixed to roughly 8 text lines each. */
+body[data-translation-mode="analytics"] #ep-silos .phase-list li {
+  display: flex;
+  align-items: flex-start;
+  min-height: calc(8 * 1.45em);
+}
+
+/* Entry Point 2 (Silos) business rows: fixed to roughly 5 text lines each. */
+body[data-translation-mode="business"] #ep-silos .phase-list li {
+  display: flex;
+  align-items: flex-start;
+  min-height: calc(5 * 1.45em);
+}
+
+/* Entry Point 3 (Spreadsheets) analytics rows: fixed to roughly 8 text lines each. */
+body[data-translation-mode="analytics"] #ep-spreadsheets .phase-list li {
+  display: flex;
+  align-items: flex-start;
+  min-height: calc(8 * 1.45em);
+}
+
+/* Entry Point 3 (Spreadsheets) business rows: fixed to roughly 5 text lines each. */
+body[data-translation-mode="business"] #ep-spreadsheets .phase-list li {
+  display: flex;
+  align-items: flex-start;
+  min-height: calc(5 * 1.45em);
+}
+
+/* Entry Point 4 (AI) analytics rows: fixed to roughly 8 text lines each. */
+body[data-translation-mode="analytics"] #ep-ai .phase-list li {
+  display: flex;
+  align-items: flex-start;
+  min-height: calc(8 * 1.45em);
+}
+
+/* Entry Point 4 (AI) business rows: fixed to roughly 5 text lines each. */
+body[data-translation-mode="business"] #ep-ai .phase-list li {
+  display: flex;
+  align-items: flex-start;
+  min-height: calc(5 * 1.45em);
+}
+
+/* Entry Point (Report/Tool Sprawl) analytics rows: fixed to roughly 8 text lines each. */
+body[data-translation-mode="analytics"] #ep-sprawl .phase-list li {
+  display: flex;
+  align-items: flex-start;
+  min-height: calc(8 * 1.45em);
+}
+
+/* Entry Point (Report/Tool Sprawl) business rows: fixed to roughly 5 text lines each. */
+body[data-translation-mode="business"] #ep-sprawl .phase-list li {
+  display: flex;
+  align-items: flex-start;
+  min-height: calc(5 * 1.45em);
+}
+
+/* entry point header */
+.ep-header {
+  background: var(--navy-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  display: flex; align-items: flex-start; gap: 16px;
+}
+.ep-icon {
+  width: 44px; height: 44px; border-radius: 10px;
+  background: rgba(232,160,32,.14);
+  border: 1px solid rgba(232,160,32,.28);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.ep-icon img {
+  width: 28px;
+  height: 28px;
+  display: block;
+  object-fit: contain;
+}
+.ep-title { font-size: 18px; font-weight: 600; color: var(--white); margin-bottom: 4px; }
+.ep-pain {
+  font-size: 13px; color: var(--slate-2); font-style: italic;
+  border-left: 2px solid var(--amber);
+  padding-left: 12px; margin-top: 10px; line-height: 1.6;
+}
+
+/* phases */
+.phases-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 20px; }
+.phase-card {
+  background: var(--navy-2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px 18px;
+}
+.phase-num {
+  font-size: 10px; font-weight: 600; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--amber); margin-bottom: 6px;
+}
+.phase-title { font-size: 13px; font-weight: 600; color: var(--white); margin-bottom: 10px; }
+.phase-list { list-style: none; }
+.phase-list li {
+  font-size: 12px; color: var(--slate-2);
+  padding: 4px 0; border-bottom: 1px solid var(--border);
+  line-height: 1.45;
+}
+.phase-list li:last-child { border-bottom: none; }
+.phase-list li::before { content: "→ "; color: var(--amber); opacity: .7; }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+.info-box {
+  background: var(--navy-2); border-radius: var(--radius-sm);
+  padding: 14px 18px; border: 1px solid var(--border);
+}
+.info-box-label {
+  font-size: 11px; font-weight: 600; letter-spacing: .07em;
+  text-transform: uppercase; margin-bottom: 10px;
+  display: flex; align-items: center; gap: 6px;
+}
+.info-box-label.warn { color: #f0a050; }
+.info-box-label.ok { color: #6fddb0; }
+.info-box ul { list-style: none; }
+.info-box ul li { font-size: 12px; color: var(--slate-2); padding: 3px 0; line-height: 1.45; }
+.info-box ul li::before { content: "· "; color: var(--slate); }
+
+.bq-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.bq-chip {
+  font-size: 12px; color: var(--slate-2);
+  background: var(--navy-3); border: 1px solid var(--border);
+  border-radius: 999px; padding: 4px 12px; cursor: default;
+}
+
+/* ── COMPLEXITY METER ── */
+.complexity-row { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+.complexity-label { font-size: 12px; color: var(--slate); font-weight: 500; }
+.complexity-dots { display: flex; gap: 5px; }
+.complexity-dot {
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--navy-4);
+}
+.complexity-dot.on { background: var(--amber); }
+.complexity-text { font-size: 12px; color: var(--slate-2); }
+
+/* ── DELIVERY METHODOLOGY ── */
+.delivery-stages {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  gap: 0; border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden;
+  margin-bottom: 32px;
+}
+.delivery-stage {
+  padding: 20px 20px;
+  border-right: 1px solid var(--border);
+  position: relative;
+}
+.delivery-stage:last-child { border-right: none; }
+.stage-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px; font-weight: 700;
+  color: rgba(232,160,32,.18); line-height: 1;
+  margin-bottom: 8px;
+}
+.stage-title {
+  font-size: 14px; font-weight: 600; color: var(--white); margin-bottom: 4px;
+}
+.stage-timing {
+  font-size: 11px; color: var(--amber);
+  font-family: 'DM Mono', monospace;
+  margin-bottom: 10px;
+}
+.stage-desc { font-size: 12px; color: var(--slate-2); line-height: 1.5; margin-bottom: 12px; }
+.stage-output {
+  font-size: 11px; color: var(--slate);
+  border-top: 1px solid var(--border); padding-top: 10px; margin-top: auto;
+}
+.stage-output strong { color: var(--slate-2); display: block; margin-bottom: 4px; }
+
+/* artefacts */
+.artefact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 32px; }
+.artefact-card {
+  background: var(--navy-2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 18px 20px;
+  border-top: 3px solid var(--amber);
+  transition: transform .18s, box-shadow .18s;
+}
+.artefact-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.artefact-num {
+  font-family: 'DM Mono', monospace; font-size: 11px;
+  color: var(--amber); margin-bottom: 8px;
+}
+.artefact-name { font-size: 14px; font-weight: 600; color: var(--white); margin-bottom: 6px; }
+.artefact-when {
+  font-size: 11px; color: var(--slate);
+  font-family: 'DM Mono', monospace; margin-bottom: 10px;
+}
+.artefact-desc { font-size: 12px; color: var(--slate-2); line-height: 1.5; }
+
+/* ── COMMON LAYER ── */
+.common-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 28px; }
+.common-card {
+  background: var(--navy-2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 18px 20px;
+}
+.common-icon { font-size: 22px; margin-bottom: 10px; }
+.common-title { font-size: 13px; font-weight: 600; color: var(--white); margin-bottom: 6px; }
+.common-desc { font-size: 12px; color: var(--slate-2); line-height: 1.5; }
+
+/* complexity table */
+.c-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+.c-table th {
+  text-align: left; font-size: 11px; font-weight: 600;
+  color: var(--slate); letter-spacing: .05em; text-transform: uppercase;
+  padding: 8px 10px; border-bottom: 1px solid var(--border);
+}
+.c-table th:not(:first-child) { text-align: center; font-size: 10px; }
+.c-table td {
+  padding: 7px 10px; border-bottom: 1px solid rgba(143,168,192,.08);
+  color: var(--slate-2);
+}
+.c-table td:not(:first-child) { text-align: center; }
+.pip {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  vertical-align: middle;
+}
+.pip-lo {
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 0 2px rgba(58,173,122,.14);
+}
+.pip-mid {
+  border-radius: 2px;
+  background: var(--amber);
+  box-shadow: 0 0 0 2px rgba(232,160,32,.12);
+}
+.pip-hi {
+  border-radius: 0;
+  background: var(--red);
+  transform: rotate(45deg);
+  box-shadow: 0 0 0 2px rgba(224,85,85,.12);
+}
+.pip-empty {
+  width: 12px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--slate);
+  opacity: .9;
+  transform: translateY(-1px);
+}
+.complexity-legend {
+  padding: 10px 14px;
+  font-size: 11px;
+  color: var(--slate-2);
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 14px 18px;
+  flex-wrap: wrap;
+}
+.complexity-legend-item {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 145px;
+}
+.complexity-legend-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+.complexity-legend-text strong {
+  color: var(--white);
+  font-size: 11px;
+  font-weight: 600;
+}
+.complexity-legend-text span {
+  color: var(--slate);
+}
+
+/* ── METRIC OWNERSHIP ── */
+.metric-types { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 32px; }
+.metric-type-card {
+  border-radius: var(--radius); padding: 22px 24px; border: 1px solid;
+}
+.metric-type-card.upstream {
+  background: rgba(74,159,212,.06); border-color: rgba(74,159,212,.25);
+}
+.metric-type-card.domain {
+  background: rgba(58,173,122,.06); border-color: rgba(58,173,122,.25);
+}
+.metric-type-card.hybrid {
+  background: rgba(232,160,32,.06); border-color: rgba(232,160,32,.25);
+}
+.mt-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.mt-icon { font-size: 22px; }
+.mt-label { font-size: 12px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; }
+.metric-type-card.upstream .mt-label { color: #7ec8e8; }
+.metric-type-card.domain .mt-label { color: #6fddb0; }
+.metric-type-card.hybrid .mt-label { color: var(--amber-2); }
+.mt-title { font-size: 15px; font-weight: 600; color: var(--white); margin-bottom: 8px; }
+.mt-desc { font-size: 12px; color: var(--slate-2); line-height: 1.55; margin-bottom: 12px; }
+.mt-rule {
+  font-size: 12px; padding: 8px 12px; border-radius: var(--radius-sm);
+  font-family: 'DM Mono', monospace; line-height: 1.4;
+}
+.metric-type-card.upstream .mt-rule { background: rgba(74,159,212,.1); color: #7ec8e8; }
+.metric-type-card.domain .mt-rule { background: rgba(58,173,122,.1); color: #6fddb0; }
+.metric-type-card.hybrid .mt-rule { background: rgba(232,160,32,.1); color: var(--amber-2); }
+
+/* metric dictionary sample */
+.dict-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.dict-table th {
+  text-align: left; font-size: 11px; font-weight: 600; color: var(--slate);
+  letter-spacing: .05em; text-transform: uppercase;
+  padding: 10px 12px; border-bottom: 1px solid var(--border);
+  background: var(--navy-2);
+}
+.dict-table td {
+  padding: 10px 12px; border-bottom: 1px solid rgba(143,168,192,.08);
+  color: var(--slate-2); vertical-align: top;
+}
+.dict-table tr:hover td { background: rgba(255,255,255,.02); }
+.origin-tag {
+  display: inline-flex; align-items: center;
+  font-size: 10px; font-weight: 600; padding: 2px 8px;
+  border-radius: 4px; letter-spacing: .04em; white-space: nowrap;
+}
+.origin-tag.uc { background: rgba(74,159,212,.15); color: #7ec8e8; }
+.origin-tag.dd { background: rgba(58,173,122,.15); color: #6fddb0; }
+.origin-tag.ha { background: rgba(232,160,32,.15); color: var(--amber-2); }
+.metric-name { color: var(--white); font-weight: 500; }
+
+/* ── DATA MESH ── */
+.mesh-principles { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 28px; }
+.mesh-card {
+  background: var(--navy-2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 18px 22px;
+}
+.mesh-card-label {
+  font-size: 10px; font-weight: 600; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--amber); margin-bottom: 6px;
+}
+.mesh-card-title { font-size: 14px; font-weight: 600; color: var(--white); margin-bottom: 8px; }
+.mesh-card-desc { font-size: 12px; color: var(--slate-2); line-height: 1.55; }
+
+.change-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.change-table th {
+  text-align: left; font-size: 11px; font-weight: 600; color: var(--slate);
+  letter-spacing: .05em; text-transform: uppercase;
+  padding: 10px 14px; border-bottom: 1px solid var(--border);
+}
+.change-table td {
+  padding: 10px 14px; border-bottom: 1px solid rgba(143,168,192,.08);
+  color: var(--slate-2); vertical-align: top;
+}
+.change-table tr:hover td { background: rgba(255,255,255,.02); }
+.change-what { color: var(--white); font-weight: 500; }
+.change-scope {
+  display: inline-block; font-size: 10px; padding: 2px 8px;
+  border-radius: 4px; font-weight: 600;
+}
+.scope-add { background: rgba(58,173,122,.15); color: #6fddb0; }
+.scope-frame { background: rgba(74,159,212,.15); color: #7ec8e8; }
+.scope-gate { background: rgba(232,160,32,.15); color: var(--amber-2); }
+
+/* ── VALUE PROPOSITION ── */
+.vp-problem {
+  background: var(--navy-3); border: 1px solid var(--border);
+  border-left: 3px solid var(--amber);
+  border-radius: var(--radius); padding: 22px 28px; margin-bottom: 28px;
+}
+.vp-problem p { font-size: 14px; color: var(--slate-2); line-height: 1.7; }
+.vp-problem p + p { margin-top: 12px; }
+
+.positioning-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 28px; }
+.pos-card {
+  background: var(--navy-2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 18px 22px;
+}
+.pos-card-ep { font-size: 11px; color: var(--amber); font-weight: 600; margin-bottom: 4px; }
+.pos-card-text { font-size: 13px; color: var(--slate-2); line-height: 1.6; font-style: italic; }
+
+/* ── DIVIDER / LABELS ── */
+.block-label {
+  font-size: 11px; font-weight: 600; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--slate);
+  margin-bottom: 14px; margin-top: 28px;
+  padding-bottom: 8px; border-bottom: 1px solid var(--border);
+}
+.block-label:first-child { margin-top: 0; }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--navy-2); }
+::-webkit-scrollbar-thumb { background: var(--navy-4); border-radius: 3px; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1100px) {
+  .phases-grid { grid-template-columns: 1fr 1fr; }
+  .delivery-stages { grid-template-columns: 1fr 1fr; }
+  .artefact-grid { grid-template-columns: 1fr 1fr; }
+  .common-grid { grid-template-columns: 1fr 1fr; }
+  .metric-types { grid-template-columns: 1fr; }
+  .mesh-principles { grid-template-columns: 1fr; }
+}
+@media (max-width: 900px) {
+  .sidebar { width: 240px; }
+  .section { padding: 28px 28px; }
+  .grid-2 { grid-template-columns: 1fr; }
+  .grid-3 { grid-template-columns: 1fr 1fr; }
+  .two-col { grid-template-columns: 1fr; }
+  .positioning-cards { grid-template-columns: 1fr; }
+  .copyright-bar { padding: 16px 24px; }
+}
+@media (max-width: 700px) {
+  .sidebar { display: none; }
+  .section { padding: 24px 20px; }
+  .phases-grid { grid-template-columns: 1fr; }
+  .delivery-stages { grid-template-columns: 1fr; }
+  .artefact-grid { grid-template-columns: 1fr; }
+  .common-grid { grid-template-columns: 1fr; }
+  .grid-3 { grid-template-columns: 1fr; }
+  .ep-tabs { gap: 6px; }
+  .ep-tab { font-size: 12px; padding: 6px 12px; }
+  .section-title { font-size: 24px; }
+  .copyright-bar { flex-direction: column; align-items: flex-start; }
+  .copyright-right { text-align: left; }
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.section.active { animation: fadeUp .3s ease; }
+
+/* ── COPYRIGHT FOOTER ── */
+.copyright-bar {
+  border-top: 1px solid var(--border);
+  background: var(--navy-2);
+  padding: 16px 44px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 20px; flex-wrap: wrap;
+}
+.copyright-left {
+  display: flex; align-items: center; gap: 14px;
+}
+.footer-md-logo {
+  width: 36px;
+  height: 36px;
+  display: block;
+  flex-shrink: 0;
+}
+.copyright-name {
+  font-size: 13px; font-weight: 600; color: var(--white);
+}
+.copyright-name span {
+  font-weight: 400; color: var(--slate); margin-left: 4px;
+}
+.copyright-notice {
+  font-size: 11px; color: var(--slate); margin-top: 2px; line-height: 1.5;
+}
+.copyright-right {
+  font-size: 11px; color: var(--slate); text-align: right; line-height: 1.6;
+}
+.copyright-right strong { color: var(--slate-2); font-weight: 500; }
+.ip-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 10px; font-weight: 600; letter-spacing: .06em;
+  text-transform: uppercase; padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(232,160,32,.1);
+  border: 1px solid rgba(232,160,32,.25);
+  color: var(--amber-2);
+  margin-top: 5px;
+}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="app-body">
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <svg class="md-logo" viewBox="0 0 120 120" width="80" height="80" xmlns="http://www.w3.org/2000/svg" aria-label="Marcin Duda logo" role="img">
+      <rect width="120" height="120" rx="18" fill="#0d1b2a"/>
+      <line x1="14" y1="68" x2="108" y2="68" stroke="#1a2e45" stroke-width="0.7"/>
+      <line x1="14" y1="46" x2="108" y2="46" stroke="#1a2e45" stroke-width="0.7"/>
+      <line x1="14" y1="24" x2="108" y2="24" stroke="#1a2e45" stroke-width="0.7"/>
+      <polyline points="16,82 24,76 32,72 40,66 48,62 56,55 64,50 72,44" fill="none" stroke="#4a9fd4" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
+      <polygon points="72,44 80,38 88,31 96,26 104,20 104,32 96,38 88,44 80,48 72,52" fill="#e8a020" opacity="0.10"/>
+      <polyline points="72,44 80,38 88,31 96,26 104,20" fill="none" stroke="#e8a020" stroke-width="0.9" stroke-dasharray="3 2" stroke-linecap="round" opacity="0.55"/>
+      <polyline points="72,52 80,48 88,44 96,38 104,32" fill="none" stroke="#e8a020" stroke-width="0.9" stroke-dasharray="3 2" stroke-linecap="round" opacity="0.35"/>
+      <polyline points="72,48 80,43 88,37 96,32 104,26" fill="none" stroke="#e8a020" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.75"/>
+      <line x1="72" y1="38" x2="72" y2="86" stroke="#e8a020" stroke-width="0.7" stroke-dasharray="2 3" opacity="0.3"/>
+      <line x1="22" y1="58" x2="22" y2="82" stroke="#8fa8c0" stroke-width="0.9" opacity="0.45"/>
+      <rect x="19" y="66" width="6" height="12" rx="1.2" fill="#3aad7a" opacity="0.65"/>
+      <line x1="31" y1="54" x2="31" y2="80" stroke="#8fa8c0" stroke-width="0.9" opacity="0.45"/>
+      <rect x="28" y="62" width="6" height="14" rx="1.2" fill="#e05555" opacity="0.55"/>
+      <line x1="40" y1="44" x2="40" y2="76" stroke="#8fa8c0" stroke-width="0.9" opacity="0.45"/>
+      <rect x="37" y="52" width="6" height="18" rx="1.2" fill="#3aad7a" opacity="0.65"/>
+      <line x1="50" y1="50" x2="50" y2="76" stroke="#8fa8c0" stroke-width="0.9" opacity="0.45"/>
+      <rect x="47" y="58" width="6" height="12" rx="1.2" fill="#e05555" opacity="0.45"/>
+      <line x1="14" y1="10" x2="14" y2="90" stroke="#2a4060" stroke-width="1.2" stroke-linecap="round"/>
+      <line x1="14" y1="90" x2="108" y2="90" stroke="#2a4060" stroke-width="1.2" stroke-linecap="round"/>
+      <circle cx="14" cy="90" r="2.8" fill="#e8a020"/>
+      <path d="M16 88 L16 18 L37 52 L58 18 L58 88" fill="none" stroke="#f5f8fa" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+      <path d="M64 18 L64 88 L76 88 Q106 88 106 53 Q106 18 76 18 Z" fill="none" stroke="#e8a020" stroke-width="3" stroke-linejoin="round"/>
+    </svg>
+    <h1>Marcin Duda</h1>
+    <p>Analytics Translator · Consulting Framework</p>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">Framework</div>
+    <a class="nav-item active" onclick="showSection('overview')">
+      <span class="nav-dot"></span> Overview & Problem Statement
+    </a>
+    <a class="nav-item" onclick="showSection('entrypoints')">
+      <span class="nav-dot"></span> Entry Point Framework
+    </a>
+    <a class="nav-item" onclick="showSection('methodology')">
+      <span class="nav-dot"></span> Delivery Methodology
+    </a>
+    <a class="nav-item" onclick="showSection('common')">
+      <span class="nav-dot"></span> Common Layer
+    </a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">Architecture</div>
+    <a class="nav-item" onclick="showSection('metrics')">
+      <span class="nav-dot"></span> Metric Ownership Model
+    </a>
+    <a class="nav-item" onclick="showSection('datamesh')">
+      <span class="nav-dot"></span> Data Mesh Alignment
+    </a>
+  </div>
+
+  <div class="sidebar-footer">
+    <div style="font-size:13px;color:var(--amber-2);font-style:italic;line-height:1.5;margin-bottom:8px;">"You don't have a data problem. You have a last-mile analytics problem."</div>
+    Marcin Duda · Analytics Translator<br>Consulting Framework · 2026
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+<!-- ══════════════════════════════════════════════
+     OVERVIEW
+══════════════════════════════════════════════ -->
+<section id="overview" class="section active">
+  <div class="section-hero">
+    <div class="section-eyebrow">Marcin Duda · Analytics Translator</div>
+    <h2 class="section-title">You don't have a data problem.<br>You have a last-mile analytics problem.</h2>
+    <p class="section-lead" style="font-size:17px;color:var(--white);font-weight:500;margin-bottom:10px;">I solve that.</p>
+    <p class="section-lead">Most organisations have invested heavily in data infrastructure. The pipelines run. The warehouse is populated. The dashboards exist. And yet the business still doesn't trust the numbers, still can't answer the questions that matter, and still runs on spreadsheets, drowning in reconciliations.</p>
+    <p class="section-lead" style="margin-top:10px;">That's not a data problem. That's a last-mile analytics problem: the gap between what your data infrastructure can do and what your business users actually get from it. It's the most consistently under-invested layer in analytics.</p>
+    <p class="section-lead" style="margin-top:10px;">It's the space I specialize in.</p>
+  </div>
+
+  <!-- Identity card -->
+  <div style="background:rgba(232,160,32,.06);border:1px solid rgba(232,160,32,.28);border-radius:var(--radius);padding:24px 28px;margin-bottom:28px;display:flex;align-items:flex-start;gap:20px;">
+    <svg viewBox="0 0 120 120" width="52" height="52" xmlns="http://www.w3.org/2000/svg" aria-label="Marcin Duda logo" role="img" style="display:block;flex-shrink:0;">
+      <rect width="120" height="120" rx="18" fill="#0d1b2a"/>
+      <line x1="14" y1="68" x2="108" y2="68" stroke="#1a2e45" stroke-width="0.7"/>
+      <line x1="14" y1="46" x2="108" y2="46" stroke="#1a2e45" stroke-width="0.7"/>
+      <line x1="14" y1="24" x2="108" y2="24" stroke="#1a2e45" stroke-width="0.7"/>
+      <polyline points="16,82 24,76 32,72 40,66 48,62 56,55 64,50 72,44" fill="none" stroke="#4a9fd4" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
+      <polygon points="72,44 80,38 88,31 96,26 104,20 104,32 96,38 88,44 80,48 72,52" fill="#e8a020" opacity="0.10"/>
+      <polyline points="72,44 80,38 88,31 96,26 104,20" fill="none" stroke="#e8a020" stroke-width="0.9" stroke-dasharray="3 2" stroke-linecap="round" opacity="0.55"/>
+      <polyline points="72,52 80,48 88,44 96,38 104,32" fill="none" stroke="#e8a020" stroke-width="0.9" stroke-dasharray="3 2" stroke-linecap="round" opacity="0.35"/>
+      <polyline points="72,48 80,43 88,37 96,32 104,26" fill="none" stroke="#e8a020" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.75"/>
+      <line x1="72" y1="38" x2="72" y2="86" stroke="#e8a020" stroke-width="0.7" stroke-dasharray="2 3" opacity="0.3"/>
+      <line x1="22" y1="58" x2="22" y2="82" stroke="#8fa8c0" stroke-width="0.9" opacity="0.45"/>
+      <rect x="19" y="66" width="6" height="12" rx="1.2" fill="#3aad7a" opacity="0.65"/>
+      <line x1="40" y1="44" x2="40" y2="76" stroke="#8fa8c0" stroke-width="0.9" opacity="0.45"/>
+      <rect x="37" y="52" width="6" height="18" rx="1.2" fill="#3aad7a" opacity="0.65"/>
+      <line x1="14" y1="10" x2="14" y2="90" stroke="#2a4060" stroke-width="1.2" stroke-linecap="round"/>
+      <line x1="14" y1="90" x2="108" y2="90" stroke="#2a4060" stroke-width="1.2" stroke-linecap="round"/>
+      <circle cx="14" cy="90" r="2.8" fill="#e8a020"/>
+      <path d="M16 88 L16 18 L37 52 L58 18 L58 88" fill="none" stroke="#f5f8fa" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+      <path d="M64 18 L64 88 L76 88 Q106 88 106 53 Q106 18 76 18 Z" fill="none" stroke="#e8a020" stroke-width="3" stroke-linejoin="round"/>
+    </svg>
+    <div>
+      <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--white);margin-bottom:2px;">Marcin Duda</div>
+      <div style="font-size:13px;color:var(--amber-2);font-weight:500;margin-bottom:10px;letter-spacing:.02em;">Analytics Translator</div>
+      <div style="font-size:13px;color:var(--slate-2);line-height:1.65;max-width:620px;">Full-stack analytics practitioner specialising in semantic models, self-service analytics, and analytics enablement. I work at the intersection of business, data modelling, and decision-making, translating business concepts into trusted analytical products that people can actually use. I help organisations turn fragmented reporting into scalable analytical capability, ensuring it reaches the people who need to make decisions with it.</div>
+    </div>
+  </div>
+
+  <div class="vp-problem">
+    <p>I specialise in designing the analytical layer that sits between data infrastructure and business decision-making.</p>
+    <p>My work focuses on creating governed semantic models, consistent business definitions, and self-service analytical experiences that allow users to explore data with confidence.</p>
+    <p>Rather than treating analytics as a reporting function, I treat it as an organisational capability. The objective is not simply to deliver dashboards, but to create trusted analytical products that scale across teams, reduce dependency on manual reporting, and support better decision-making.</p>
+    <p>This often involves:</p>
+    <ul style="font-size:14px;color:var(--slate-2);line-height:1.7;margin:6px 0 0 22px;">
+      <li>Defining shared business metrics and terminology</li>
+      <li>Building semantic models and analytical data products</li>
+      <li>Designing decision-support experiences for executives, analysts, and operational teams</li>
+      <li>Expanding self-service analytics capabilities</li>
+      <li>Establishing trust through governance and analytical consistency</li>
+      <li>Preparing data foundations for AI-enabled analytics</li>
+    </ul>
+    <p></p>
+    <p>The goal is straightforward: transform fragmented and dispersed data assets into decision-making capability.</p>
+  </div>
+
+  <div class="block-label">How I work</div>
+  <div class="grid-3">
+    <div class="card">
+      <div style="font-size:24px;margin-bottom:10px;">🧩 → 📊</div>
+      <div style="font-size:13px;font-weight:600;color:var(--amber-2);margin-bottom:6px;">You know the business. I turn that knowledge into analytics.</div>
+      <div style="font-size:12px;color:var(--slate-2);line-height:1.55;">You are the domain expert. My job is to ask the questions that turn your business logic into a data model that actually reflects how your business works. That translation is a distinct skill from knowing your industry — and it's the one that's been missing.</div>
+    </div>
+    <div class="card">
+      <div style="font-size:24px;margin-bottom:10px;">⚡→ 🔄</div>
+      <div style="font-size:13px;font-weight:600;color:var(--amber-2);margin-bottom:6px;">Fast, pragmatic, iterative</div>
+      <div style="font-size:12px;color:var(--slate-2);line-height:1.55;">Proof of Concept on real sample data first. Working prototype on full data second. Deployment and iterative enhancements third. Every stage produces something usable — no months-long requirements gathering before first value.</div>
+    </div>
+    <div class="card">
+      <div style="font-size:24px;margin-bottom:10px;">⬛ → 🛠️</div>
+      <div style="font-size:13px;font-weight:600;color:var(--amber-2);margin-bottom:6px;">Never a black box</div>
+      <div style="font-size:12px;color:var(--slate-2);line-height:1.55;">Documentation is built into the delivery rhythm, not deferred. A fixed, minimal artefact set ensures every solution remains explainable, ownable, and maintainable — by you, not by me. When definitions evolve, you change them. When logic shifts, you drive it. The solution adapts. No middleman required.</div>
+    </div>
+  </div>
+
+  <div class="block-label" style="margin-top:28px;">What the Analytics Translator does differently</div>
+  <div class="grid-2">
+    <div class="card">
+      <div style="font-size:12px;color:var(--slate);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">What most BI delivery looks like</div>
+      <ul style="list-style:none;font-size:12px;color:var(--slate-2);">
+        <li style="padding:4px 0;border-bottom:1px solid var(--border);">→ You got a dashboard, but your team is still scrambling for an answer when you ask them for actionable insights.</li>
+        <li style="padding:4px 0;border-bottom:1px solid var(--border);">→ You exported it to Excel. Your colleagues did too. Now there are six versions of the truth.</li>
+        <li style="padding:4px 0;border-bottom:1px solid var(--border);">→ Reports designed around the data, not around the decisions.</li>
+        <li style="padding:4px 0;">→ Success was measured by go-live, not by business adoption.</li>
+      </ul>
+    </div>
+    <div class="card" style="border-color:rgba(232,160,32,.28);background:rgba(232,160,32,.04);">
+      <div style="font-size:12px;color:var(--amber);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">What I deliver</div>
+      <ul style="list-style:none;font-size:12px;color:var(--slate-2);">
+        <li style="padding:4px 0;border-bottom:1px solid var(--border);">→ A semantic layer designed around the questions your business actually asks.</li>
+        <li style="padding:4px 0;border-bottom:1px solid var(--border);">→ One definition. One number. Every tool, every team, every time.</li>
+        <li style="padding:4px 0;border-bottom:1px solid var(--border);">→ KPIs built around how your business thinks - not how the data warehouse is structured.</li>
+        <li style="padding:4px 0;">→ I'm not done when it's built. I'm done when your people are using it.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     ENTRY POINTS
+══════════════════════════════════════════════ -->
+<section id="entrypoints" class="section">
+  <div class="section-hero">
+    <div class="section-eyebrow">Marcin Duda · Analytics Translator</div>
+    <h2 class="section-title">Where does our conversation start?</h2>
+    <p class="section-lead">Business users don't present their problems in analytical terms — they present them as the situation they're in. This framework meets them at their entry point and maps a clear path forward from there. Select the situation you're dealing with.</p>
+  </div>
+
+  <div class="ep-tabs">
+    <button class="ep-tab active" onclick="showEP('dashboard', this)"><img class="ep-tab-icon" src="icons/icon-dashboard.svg" alt="">Existing Dashboard</button>
+    <button class="ep-tab" onclick="showEP('sprawl', this)"><img class="ep-tab-icon" src="icons/icon-report-sprawl.svg" alt="">Report/Tool Sprawl</button>
+    <button class="ep-tab" onclick="showEP('spreadsheets', this)"><img class="ep-tab-icon" src="icons/icon-spreadsheet.svg" alt="">Spreadsheet Dependency</button>
+    <button class="ep-tab ep-tab-ai" onclick="showEP('ai', this)"><img class="ep-tab-icon ep-tab-icon-sm" src="icons/icon-ai-copilot.svg" alt=""><span class="ep-tab-label">AI / Copilot<br>Pressure</span></button>
+    <button class="ep-tab" onclick="showEP('silos', this)"><img class="ep-tab-icon" src="icons/icon-disconnected-silos.SVG" alt="">Disconnected Data / Silos</button>
+    <button class="ep-tab" onclick="showEP('greenfield', this)"><img class="ep-tab-icon" src="icons/icon-greenfield.svg" alt="">Greenfield</button>
+    <button class="ep-tab ep-tab-domain" onclick="showEP('domain', this)"><img class="ep-tab-icon" src="icons/icon-translation-failure.SVG" alt=""><span class="ep-tab-label">Translation<br>Failure</span></button>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="ep-dashboard" class="ep-panel active">
+    <div class="ep-header">
+      <div class="ep-icon"><img src="icons/icon-dashboard.svg" alt="Dashboard icon"></div>
+      <div>
+        <div class="ep-title">We have a dashboard</div>
+        <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;">
+          <span class="badge badge-slate">Most common entry</span>
+          <span class="badge badge-amber">Complexity: Quick win</span>
+        </div>
+        <div class="ep-pain">"Our dashboard is always out of date, nobody knows where the numbers come from, and it only tells us what happened — not what to do about it."</div>
+      </div>
+    </div>
+    <div class="translation-toggle">
+      <span class="translation-label">Translation View</span>
+      <div class="translation-segment">
+        <button class="translation-btn" data-mode="business" onclick="setTranslationMode('business')">Business Translation</button>
+        <button class="translation-btn" data-mode="analytics" onclick="setTranslationMode('analytics')">Analytics Translation</button>
+      </div>
+    </div>
+    <div class="phases-grid">
+      <div class="phase-card"><div class="phase-num">Phase 01</div><div class="phase-title">Assess Current State</div><ul class="phase-list"><li><span class="text-analytics"><strong>Source-to-report lineage mapping</strong> - document every data source, connection path, refresh dependency, and transformation between source systems and the dashboard</span><span class="text-business">Map every place your team pulls numbers from - which systems, files, and shared drives</span></li><li><span class="text-analytics"><strong>Refresh architecture assessment</strong> - classify refresh mechanisms (scheduled, event-driven, manual), identify failure points, ownership, SLAs, and recovery procedures</span><span class="text-business">Find out how the numbers get updated - automatically, manually, or routinely fail without warning</span></li><li><span class="text-analytics"><strong>Metric catalogue and business logic inventory</strong> - document all measures, calculations, KPIs, filters, and business rules; identify ownership and duplication; establish a draft business glossary</span><span class="text-business">List every key metric the business uses - where it's defined and who owns it</span></li><li><span class="text-analytics"><strong>Usage and decision mapping</strong> - identify user groups, report consumption patterns, and decision processes supported by the dashboard</span><span class="text-business">Understand how teams use the dashboard, what questions they expect it to answer, and which decisions depend on it</span></li><li><span class="text-analytics"><strong>Trust and adoption assessment</strong> - evaluate data quality issues, reconciliation gaps, metric disputes, workarounds, and shadow reporting outside the dashboard</span><span class="text-business">Identify where users double-check results, export to Excel, or rely on alternative reports because they do not trust the dashboard</span></li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 02</div><div class="phase-title">Define Target State</div><ul class="phase-list"><li><span class="text-analytics"><strong>Analytics operating model design</strong> - define required analytical layers (monitoring, diagnosis, prediction, action) and map them to user personas and decisions</span><span class="text-business">What questions should the solution answer: separate what's happening, why it's happening, and what action is needed</span></li><li><span class="text-analytics"><strong>Refresh and latency requirements</strong> - define target refresh frequency, data availability windows, and reporting SLAs by use case</span><span class="text-business">How fresh does the data need to be? Monthly, weekly, daily, hourly, or near-real-time</span></li><li><span class="text-analytics"><strong>Certified KPI framework</strong> - identify critical business metrics, define calculation logic, ownership, and certification criteria</span><span class="text-business">Establish a small set of KPIs everyone can trust and use consistently</span></li><li><span class="text-analytics"><strong>Trust and governance standards</strong> - define lineage visibility, data quality controls, certification badges, ownership, and auditability requirements</span><span class="text-business">Agree what evidence users need before they're willing to make decisions from the data</span></li><li><span class="text-analytics"><strong>Information architecture and wireframing</strong> - design report structure, navigation, drill paths, and user journeys before model development begins</span><span class="text-business">Sketch how users will find answers before building anything technical</span></li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 03</div><div class="phase-title">Gaps & Bottlenecks</div><ul class="phase-list"><li><span class="text-analytics"><strong>Business logic fragmented across reports</strong> - calculations exist in visuals, spreadsheets, and report layers instead of a governed semantic model</span><span class="text-business">The same KPI gives different answers depending on where you look</span></li><li><span class="text-analytics"><strong>Limited analytical context</strong> - model lacks time intelligence, trend analysis, and scenario comparison</span><span class="text-business">You can see today's number, but not whether things are improving or getting worse</span></li><li><span class="text-analytics"><strong>Manual data acquisition dependency</strong> - refresh process depends on human intervention, creating latency and operational risk</span><span class="text-business">The report is only as current as the person who remembers to update it</span></li><li><span class="text-analytics"><strong>Undefined metric ownership</strong> - no accountable owner for business definitions, approval, and change management</span><span class="text-business">Teams spend more time debating numbers than acting on them</span></li><li><span class="text-analytics"><strong>Insufficient analytical depth</strong> - reporting supports monitoring but lacks drill-through, decomposition, and root-cause analysis capabilities</span><span class="text-business">The dashboard tells you what happened, but not why</span></li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 04</div><div class="phase-title">Solution Steps</div><ul class="phase-list"><li><span class="text-analytics"><strong>Automate data ingestion and refresh pipelines</strong> - eliminate manual extracts, schedule refreshes, and implement monitoring</span><span class="text-business">Stop spending time gathering data and start spending time using it</span></li><li><span class="text-analytics"><strong>Centralize business logic in the semantic model</strong> - move calculations, KPIs, and business rules into a certified reusable layer</span><span class="text-business">Ensure every report, dashboard, and spreadsheet uses the same definitions</span></li><li><span class="text-analytics"><strong>Implement analytical time intelligence</strong> - add period comparisons, trends, seasonality, rolling windows, and benchmarking measures</span><span class="text-business">Make it easy to see what changed, by how much, and whether it matters</span></li><li><span class="text-analytics"><strong>Redesign for decision support</strong> - structure reporting around Monitoring -> Diagnosis -> Action rather than static KPI display</span><span class="text-business">Move beyond "what happened" to "so what?" and "what should we do next?"</span></li><li><span class="text-analytics"><strong>Establish trust mechanisms</strong> - certify datasets, document metrics, expose lineage, and implement ownership and governance processes</span><span class="text-business">Give users confidence that the numbers are accurate, explainable, and supported</span></li></ul></div>
+    </div>
+    <div class="two-col">
+      <div class="info-box"><div class="info-box-label warn">⚠ Key bottlenecks</div><ul><li>Manual refresh creates data staleness</li><li>Metric logic embedded within individual dashboards</li><li>No drill-through — can't go from summary to cause</li><li>Trust deficit from past errors never addressed</li></ul></div>
+      <div class="info-box"><div class="info-box-label ok">✓ Iterative target state</div><ul><li>Automated daily (or more frequent) refresh</li><li>All KPIs defined once in model, not in report</li><li>Three-layer report structure operational</li><li>Certified model with documented ownership</li></ul></div>
+    </div>
+    <div class="card"><div style="font-size:11px;color:var(--slate);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">Business questions this unlocks</div><div class="bq-chips"><span class="bq-chip">Why does Finance get a different number than Business?</span><span class="bq-chip">Can I see this by region, product, and month?</span><span class="bq-chip">What does Revenue mean in this context?</span><span class="bq-chip">How do I know this is the right number?</span></div><div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);font-size:13px;color:var(--slate-2);font-style:italic;">"I don't just make your dashboard look better — I make it so your team can trust it, explore it, and act on it without asking IT for a new report every time."</div></div>
+  </div>
+
+  <!-- REPORT / TOOL SPRAWL -->
+  <div id="ep-sprawl" class="ep-panel">
+    <div class="ep-header">
+      <div class="ep-icon"><img src="icons/icon-report-sprawl.svg" alt="Report sprawl icon"></div>
+      <div>
+        <div class="ep-title">We have reports everywhere, and nobody trusts any of them</div>
+        <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;"><span class="badge badge-slate">Consolidation opportunity</span><span class="badge badge-blue">Complexity: Moderate</span></div>
+        <div class="ep-pain">"We have a dozen dashboards across three different tools, and nobody can agree on which one to trust. Every team built their own version, and half of them show different numbers for the same thing."</div>
+      </div>
+    </div>
+    <div class="translation-toggle">
+      <span class="translation-label">Translation View</span>
+      <div class="translation-segment">
+        <button class="translation-btn" data-mode="business" onclick="setTranslationMode('business')">Business Translation</button>
+        <button class="translation-btn" data-mode="analytics" onclick="setTranslationMode('analytics')">Analytics Translation</button>
+      </div>
+    </div>
+    <div class="phases-grid">
+      <div class="phase-card"><div class="phase-num">Phase 01</div><div class="phase-title">Assess Current State</div><ul class="phase-list"><li><span class="text-analytics"><strong>Report and tool inventory</strong> - map every report, dashboard, and BI tool in use; identify owner, maintainer, audience, and active usage status</span><span class="text-business">Map every report, dashboard, and tool currently in use across teams - who built it, who looks after it, and who actually still opens it</span></li><li><span class="text-analytics"><strong>Overlap and consistency analysis</strong> - identify reports answering the same question and test whether outputs reconcile to the same metric values</span><span class="text-business">Find the reports that answer the same question and check whether they actually agree with each other</span></li><li><span class="text-analytics"><strong>Usage telemetry and retirement candidates</strong> - separate high-frequency reports from dormant assets using access data and stakeholder validation</span><span class="text-business">Work out which reports people use every week and which were built once, used twice, and quietly forgotten</span></li><li><span class="text-analytics"><strong>Root-cause analysis of proliferation</strong> - determine why teams built parallel reporting paths instead of adopting existing certified outputs</span><span class="text-business">Understand why each team ended up building their own version instead of using something that already existed</span></li><li><span class="text-analytics"><strong>Operational waste quantification</strong> - estimate time lost weekly to report selection, trust disputes, and duplicate rebuild effort</span><span class="text-business">Find out how much time gets lost each week deciding which report to trust - or rebuilding something that already exists somewhere else</span></li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 02</div><div class="phase-title">Define Target State</div><ul class="phase-list"><li><span class="text-analytics"><strong>Portfolio rationalization target</strong> - agree the minimum viable report set that covers core decisions and retire low-value duplicates</span><span class="text-business">Agree on which reports the business genuinely needs and which can be retired - most organisations can cut the count sharply without losing anything that matters</span></li><li><span class="text-analytics"><strong>Trusted destination model</strong> - define one authoritative reporting home per question domain to eliminate user guesswork</span><span class="text-business">Decide on one trusted home for each type of question, so people stop guessing which dashboard to open</span></li><li><span class="text-analytics"><strong>Certified report standard</strong> - establish a controlled set of certified reports and a formal path for requesting new ones</span><span class="text-business">Agree on a small set of certified reports everyone is expected to use - and what should happen when someone thinks a new one is genuinely needed</span></li><li><span class="text-analytics"><strong>Tool standardization policy</strong> - select the BI platforms that will remain in scope and sunset overlapping tool usage patterns</span><span class="text-business">Settle on which tools the organisation will actually standardise on, so effort stops being split across platforms doing the same job</span></li><li><span class="text-analytics"><strong>Report governance and gatekeeping</strong> - define decision rights and approval workflow for creating new reports</span><span class="text-business">Agree on who decides when a new report gets built - so the pile doesn't quietly grow back to where it started</span></li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 03</div><div class="phase-title">Gaps & Bottlenecks</div><ul class="phase-list"><li><span class="text-analytics"><strong>Conflicting parallel outputs</strong> - the same question is answered by multiple reports with inconsistent calculations and filter contexts</span><span class="text-business">The same question can be answered by five different reports - and they don't all give you the same number</span></li><li><span class="text-analytics"><strong>Uncontrolled report creation</strong> - no intake or retirement process, so report count increases continuously without governance</span><span class="text-business">Anyone can build a new report whenever they like, so the pile keeps growing and nothing ever gets retired</span></li><li><span class="text-analytics"><strong>Orphaned reporting assets</strong> - key reports were built by departed staff, leaving no ownership, support, or confidence in logic integrity</span><span class="text-business">Many of these reports were built by people who've since moved on - nobody is sure how they work or whether they're still right</span></li><li><span class="text-analytics"><strong>Duplicate build cycles across teams</strong> - teams repeatedly recreate existing outputs in other tools due to low discoverability and no catalog</span><span class="text-business">Teams keep rebuilding the same thing in different tools because they don't know something similar already exists</span></li><li><span class="text-analytics"><strong>Maintenance dilution</strong> - support effort is spread across too many artefacts, resulting in poor quality and stale logic in critical reports</span><span class="text-business">Effort is spread so thinly across so many reports that none of them gets the attention or upkeep it needs</span></li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 04</div><div class="phase-title">Solution Steps</div><ul class="phase-list"><li><span class="text-analytics"><strong>Consolidated navigation and report catalog</strong> - route users to a single trusted destination per question domain</span><span class="text-business">You stop hunting through a dozen dashboards trying to find the one with the right numbers - and know exactly where to look instead</span></li><li><span class="text-analytics"><strong>Standardized certified report set</strong> - align teams to a shared core report portfolio backed by common business logic</span><span class="text-business">Everyone works from the same handful of trusted reports, instead of every team running its own version with its own numbers</span></li><li><span class="text-analytics"><strong>Controlled new-report intake</strong> - require evidence of genuine unmet need before adding new reporting assets</span><span class="text-business">New reports only get built when there's a genuine gap - so the pile stops quietly growing back to where it started</span></li><li><span class="text-analytics"><strong>Focused stewardship of high-value reports</strong> - concentrate maintenance on prioritized reports that drive recurring decisions</span><span class="text-business">The reports that actually matter get properly looked after, instead of attention being spread thinly across dozens of half-maintained ones</span></li><li><span class="text-analytics"><strong>Fast report discovery and reuse</strong> - make report intent, ownership, and certification visible so users reuse before rebuilding</span><span class="text-business">Your team can find the right report for their question in seconds - instead of rebuilding something that already exists somewhere else</span></li></ul></div>
+    </div>
+    <div class="two-col">
+      <div class="info-box"><div class="info-box-label warn">⚠ Key bottlenecks</div><ul><li>No single trusted source per business question</li><li>Uncontrolled report growth across teams and tools</li><li>Conflicting calculations for the same KPI</li><li>Too many reports to maintain properly</li></ul></div>
+      <div class="info-box"><div class="info-box-label ok">✓ Iterative target state</div><ul><li>One trusted report destination per question type</li><li>Small certified report portfolio with clear ownership</li><li>Formal intake for new report requests</li><li>Retirement process prevents sprawl from returning</li></ul></div>
+    </div>
+    <div class="card"><div style="font-size:13px;color:var(--slate-2);font-style:italic;">"I can help you collapse report sprawl into a trusted, governed reporting core - so teams stop debating dashboards and start making decisions."</div></div>
+  </div>
+
+  <!-- SILOS -->
+  <div id="ep-silos" class="ep-panel">
+    <div class="ep-header">
+      <div class="ep-icon"><img src="icons/icon-disconnected-silos.SVG" alt="Disconnected silos icon"></div>
+      <div>
+        <div class="ep-title">Data is everywhere but disconnected</div>
+        <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;"><span class="badge badge-slate">Full stack opportunity</span><span class="badge badge-red">Complexity: Full Stack</span></div>
+        <div class="ep-pain">"We have data in the ERP, the CRM, spreadsheets, and a shared drive. No one can ever get a consistent answer because everyone is pulling from a different place."</div>
+      </div>
+    </div>
+    <div class="translation-toggle">
+      <span class="translation-label">Translation View</span>
+      <div class="translation-segment">
+        <button class="translation-btn" data-mode="business" onclick="setTranslationMode('business')">Business Translation</button>
+        <button class="translation-btn" data-mode="analytics" onclick="setTranslationMode('analytics')">Analytics Translation</button>
+      </div>
+    </div>
+    <div class="phases-grid">
+      <div class="phase-card"><div class="phase-num">Phase 01</div><div class="phase-title">Assess Current State</div><ul class="phase-list"><li><span class="text-analytics"><strong>Source system inventory</strong> - document system types (ERP, CRM, flat files, spreadsheets), connection protocols (ODBC, REST API, SFTP, manual export), and data ownership per source</span><span class="text-business">List every place data lives - finance systems, customer systems, spreadsheets, and shared drives</span></li><li><span class="text-analytics"><strong>Conformed dimension candidate assessment</strong> - identify cross-source entities (customer, product, geography) and evaluate natural key alignment, naming conventions, and grain consistency</span><span class="text-business">Find the concepts that appear in multiple systems, like "customer" or "product", and check whether they mean the same thing everywhere</span></li><li><span class="text-analytics"><strong>Ad-hoc integration pattern mapping</strong> - document manual VLOOKUP or Power Query joins, shadow ETL processes, and intermediate flat files; estimate error rates and data loss risk</span><span class="text-business">Find out how each team currently combines data from different sources and how much manual effort or rework it creates</span></li><li><span class="text-analytics"><strong>Reconciliation hotspot prioritization</strong> - identify the highest-friction reconciliation (the one consuming the most analyst time or producing the most disputes) and use it as the primary design anchor and ROI validation point</span><span class="text-business">Find the reconciliation that causes the most arguments or wasted time - that is where we start</span></li><li><span class="text-analytics"><strong>Source-level data quality profiling</strong> - assess completeness (null rates, coverage), timeliness (extraction lag, update frequency), consistency (referential integrity), and validity across each source</span><span class="text-business">Check how complete and current each source actually is - missing values, outdated records, and broken links between systems</span></li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 02</div><div class="phase-title">Define Target State</div><ul class="phase-list"><li><span class="text-analytics"><strong>Conformed dimension scope definition (Kimball)</strong> - define canonical grain, surrogate key strategy, and SCD type per dimension</span><span class="text-business">Agree on the minimum set of shared definitions the business needs - which concepts (customer, product, geography, time) must mean the same thing everywhere</span></li><li><span class="text-analytics"><strong>Validated analytical question set design</strong> - define analytical requirements as a validated question set and use it as integration-layer acceptance criteria; map each question to fact-dimension join paths</span><span class="text-business">Agree upfront on the specific questions this integration must answer - those questions become the test of whether the solution is good enough</span></li><li><span class="text-analytics"><strong>Subject-area refresh SLA specification</strong> - define maximum acceptable latency from source transaction to analytical availability and document as data contract terms</span><span class="text-business">Decide how quickly data from each source needs to be reflected in reports - and make that an explicit commitment, not a vague expectation</span></li><li><span class="text-analytics"><strong>Data ownership and decision-rights model</strong> - assign a Data Owner per conformed dimension and business entity; document DRI accountability for definition changes in the Data Product Passport</span><span class="text-business">Agree on who has the final say on what "customer" or "product" means - so when definitions change, everyone knows who decides</span></li><li><span class="text-analytics"><strong>Persona-specific consumption interface architecture</strong> - define consumption interfaces per user persona: semantic model with DirectQuery or Import for Power BI, XMLA endpoint for Excel Analysis Services, or REST API for custom UI</span><span class="text-business">Agree on how different teams will actually use the data - dashboards, spreadsheets, or custom tools - and design for those workflows from the start</span></li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 03</div><div class="phase-title">Gaps & Bottlenecks</div><ul class="phase-list"><li><span class="text-analytics"><strong>No conformed dimensions</strong> - each source maintains independent master data with no shared natural keys, no entity resolution, and no canonical grain</span><span class="text-business">Each system has its own version of "customer" or "product" - they do not match, so cross-functional reporting turns into reconciliation debates</span></li><li><span class="text-analytics"><strong>No ELT or ETL pipeline</strong> - cross-source joins are performed via ad-hoc Power Query or VLOOKUP with no lineage, no error handling, and no reproducibility</span><span class="text-business">Combining data from different systems requires someone to manually stitch it together every time the analysis is needed</span></li><li><span class="text-analytics"><strong>Misaligned fact grain across sources</strong> - ERP at transaction level, CRM at account level, and flat files at monthly aggregate level, leaving no reconciliation path without grain transformation</span><span class="text-business">Different systems record data at different levels of detail - one shows individual transactions while another only shows rolled-up totals</span></li><li><span class="text-analytics"><strong>No governed self-service access layer</strong> - source system access is restricted to IT, with no semantic abstraction between raw data and business consumers</span><span class="text-business">Getting data out of source systems requires raising a request with IT - the business has no trusted self-service path</span></li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 04</div><div class="phase-title">Solution Steps</div><ul class="phase-list"><li><span class="text-analytics"><strong>Build staging layer</strong> - source-aligned extraction with no business logic applied, preserving raw schemas and supporting full and incremental loads under documented extraction contracts</span><span class="text-business">Create a reliable, automated connection to each source so data flows into one place consistently</span></li><li><span class="text-analytics"><strong>Design conformed dimensions (Kimball)</strong> - implement surrogate key generation, SCD Type 1 or 2 handling, canonical attribute sets, and natural key mapping across source systems</span><span class="text-business">Establish one agreed definition for shared business concepts like customer, product, and date</span></li><li><span class="text-analytics"><strong>Build fact tables at validated grain</strong> - model subject-area facts (for example transaction, order-line, or daily-position) with additive measures, foreign key integrity to conformed dimensions, and degenerate dimensions where needed</span><span class="text-business">Structure the data at the right level of detail for each business question so teams can analyze consistently</span></li><li><span class="text-analytics"><strong>Build certified semantic model</strong> - implement SSAS Tabular or Power BI dataset with star schema foundation, certified KPI DAX layer, and marked date table with complete time intelligence coverage</span><span class="text-business">Build the shared analytical layer on top with consistent KPI definitions, period comparisons, and a trusted model for reporting</span></li><li><span class="text-analytics"><strong>Deploy governed self-service layer</strong> - configure Row Level Security by domain and persona, enable Power BI dataset certification, and enforce workspace access controls aligned to data ownership</span><span class="text-business">Open up self-service access so each team sees the data relevant to them and can analyze without relying on ad-hoc extracts</span></li></ul></div>
+    </div>
+    <div class="two-col">
+      <div class="info-box"><div class="info-box-label warn">⚠ Key bottlenecks</div><ul><li>No shared entity definitions across systems</li><li>Manual join process = reconciliations factory</li><li>Different data granularity across source systems</li><li>No governed access path for business users</li></ul></div>
+      <div class="info-box"><div class="info-box-label ok">✓ Iterative target state</div><ul><li>Single version of every shared entity</li><li>Automated integration pipeline with documented lineage</li><li>Business users self-serve from one certified model</li><li>Reconciliation meetings eliminated for covered domains</li></ul></div>
+    </div>
+    <div class="card"><div style="font-size:11px;color:var(--slate);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">Business questions this unlocks</div><div class="bq-chips"><span class="bq-chip">Why does my revenue not match Finance?</span><span class="bq-chip">Can we combine CRM pipeline with ERP actuals?</span><span class="bq-chip">Who owns the customer dimension?</span><span class="bq-chip">How do we stop data living in five places?</span></div><div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);font-size:13px;color:var(--slate-2);font-style:italic;">"I can take your scattered data landscape and build a single connected model every function pulls from — so reconciliation meetings become unnecessary."</div></div>
+  </div>
+
+  <!-- SPREADSHEETS -->
+  <div id="ep-spreadsheets" class="ep-panel">
+    <div class="ep-header">
+      <div class="ep-icon"><img src="icons/icon-spreadsheet.svg" alt="Spreadsheet icon"></div>
+      <div>
+        <div class="ep-title">Everything runs on spreadsheets</div>
+        <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;"><span class="badge badge-slate">Governance entry</span><span class="badge badge-blue">Complexity: Structured build</span></div>
+        <div class="ep-pain">"We have one spreadsheet that takes three hours every month to update, nobody else understands it, and we're terrified it's wrong."</div>
+      </div>
+    </div>
+    <div class="translation-toggle">
+      <span class="translation-label">Translation View</span>
+      <div class="translation-segment">
+        <button class="translation-btn" data-mode="business" onclick="setTranslationMode('business')">Business Translation</button>
+        <button class="translation-btn" data-mode="analytics" onclick="setTranslationMode('analytics')">Analytics Translation</button>
+      </div>
+    </div>
+    <div class="phases-grid">
+      <div class="phase-card"><div class="phase-num">Phase 01</div><div class="phase-title">Assess Current State</div><ul class="phase-list"><li><span class="text-analytics"><strong>Shadow IT audit</strong> - identify business-critical spreadsheets by downstream decision impact, refresh frequency, and risk tier (single point of failure, key-person dependency, regulatory touch)</span><span class="text-business">Find the spreadsheets the business could not function without - the ones that feed board packs, financial close, or operational decisions</span></li><li><span class="text-analytics"><strong>Data lineage trace per file</strong> - document source systems, extraction method (manual export, ODBC connection, copy-paste), intermediate files, and transformation steps applied pre-load</span><span class="text-business">Follow the data backwards - find out where each spreadsheet gets its numbers from, how they arrive, and how many manual steps are involved</span></li><li><span class="text-analytics"><strong>Embedded business logic reverse-engineering</strong> - document formula chains, allocation rules, conditional filters, and hardcoded assumptions; flag volatile functions, circular references, and undocumented constants</span><span class="text-business">Write down exactly how the numbers are calculated - every formula, every allocation rule, every assumption baked in - so the logic exists somewhere outside the file itself</span></li><li><span class="text-analytics"><strong>Key-person dependency assessment</strong> - identify sole maintainer, document tribal knowledge not captured in the file, and evaluate succession risk if that person is unavailable</span><span class="text-business">Find out who looks after it - and whether anyone else could step in if that person was unavailable</span></li><li><span class="text-analytics"><strong>Downstream consumer and workflow mapping</strong> - identify reports, dashboards, or processes dependent on file output and assess impact propagation if the file produces incorrect results</span><span class="text-business">Understand what this spreadsheet feeds into - which reports, decisions, or processes would break if it was wrong or unavailable</span></li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 02</div><div class="phase-title">Define Target State</div><ul class="phase-list"><li><span class="text-analytics"><strong>Automation candidate prioritization by risk score</strong> - weight by refresh frequency, downstream dependency count, manual effort per cycle, and error detection lag</span><span class="text-business">Agree on which processes to fix first - prioritize by how often they run, how many people depend on them, and how long they take to maintain</span></li><li><span class="text-analytics"><strong>Process-level data freshness SLA definition</strong> - set maximum acceptable latency between source change and spreadsheet output and document as baseline pipeline design requirements</span><span class="text-business">Decide how frequently each process needs to run - and make that a requirement, not a best effort</span></li><li><span class="text-analytics"><strong>Business logic layer classification</strong> - map certified metric definitions and aggregations to semantic model layer, while keeping ad-hoc analysis, scenario modeling, and user-controlled parameters in Excel consumption layer</span><span class="text-business">Separate stable, repeatable calculations that should be centralized from flexible analysis Excel is good at - so each layer does the job it is suited for</span></li><li><span class="text-analytics"><strong>Governance framework definition</strong> - define file versioning policy, named owner per file, documentation standard (inline comments, data dictionary), and change log requirements</span><span class="text-business">Agree on the basics: who owns each file, how changes get recorded, and where documentation lives - so no single person holds all the knowledge</span></li><li><span class="text-analytics"><strong>Change management process establishment</strong> - define change initiator roles, peer review requirements, UAT sign-off, rollback procedure, and consumer notification on logic changes</span><span class="text-business">Agree on who can change the logic - and what must happen before a change goes live - so errors cannot be introduced silently</span></li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 03</div><div class="phase-title">Gaps & Bottlenecks</div><ul class="phase-list"><li><span class="text-analytics"><strong>No automated data pipeline</strong> - acquisition relies on manual export or copy-paste with no scheduled extraction, no error handling, and no audit trail of what loaded and when</span><span class="text-business">Every refresh depends on someone doing it manually - if they are unavailable, the numbers go stale, and there is no record of what loaded or when</span></li><li><span class="text-analytics"><strong>Business logic trapped in opaque formula chains</strong> - no inline documentation, no separation of inputs from calculations, and no unit tests; logic is non-reproducible outside the file</span><span class="text-business">Nobody outside the file owner can explain how numbers are calculated - the logic is invisible and cannot be checked or challenged</span></li><li><span class="text-analytics"><strong>No version control system</strong> - no Git, no enforced SharePoint versioning, and no change log; modifications overwrite prior state with no rollback path and no audit trail</span><span class="text-business">When something changes or breaks, there is no record of what was altered, when, or by whom - and no way to roll back</span></li><li><span class="text-analytics"><strong>No separation of concerns</strong> - one workbook handles extraction, transformation, business logic, and presentation, creating brittle coupling and poor testability</span><span class="text-business">The same file is doing three jobs at once: collecting data, calculating numbers, and presenting results - changing one part risks breaking all three</span></li><li><span class="text-analytics"><strong>No data validation layer</strong> - no input schema checks, no range or threshold controls, and no row-count reconciliation against source; bad data propagates silently to output</span><span class="text-business">There is nothing to catch bad input data before it reaches final numbers - errors only surface when someone spots them in the output</span></li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 04</div><div class="phase-title">Solution Steps</div><ul class="phase-list"><li><span class="text-analytics"><strong>Replace manual extraction with automated pipeline</strong> - implement Power Query M with parameterized source connections, or Dataflow Gen2 or ADF for enterprise scale, and configure scheduled refresh with failure alerting</span><span class="text-business">Automate the data feed so the file updates itself - removing the manual step and person dependency</span></li><li><span class="text-analytics"><strong>Reverse-engineer and unit-test logic before migration</strong> - build a test dataset with known outputs, document formulas and allocations as functional specification, and use as regression baseline during transition</span><span class="text-business">Write down and verify every calculation before changing anything - so there is a clear record of logic and a way to confirm nothing breaks</span></li><li><span class="text-analytics"><strong>Migrate certified metric logic to semantic model layer</strong> - use Power BI shared dataset, SSAS Tabular, or dbt to remove formula duplication and establish a single source of truth for shared KPIs</span><span class="text-business">Move core calculations out of spreadsheets into a shared governed layer - so logic is maintained once and spreadsheets become display surfaces</span></li><li><span class="text-analytics"><strong>Reconfigure Excel as thin consumption layer</strong> - connect Excel to semantic model through XMLA endpoint or Analyze in Excel, keep business logic in model, and limit Excel to ad-hoc analysis and scenario inputs</span><span class="text-business">Keep Excel for what it does best - flexible analysis and scenario exploration - not as the home of business-critical calculations</span></li><li><span class="text-analytics"><strong>Operationalize spreadsheet assets</strong> - implement version control (SharePoint versioning or Git for structured workbooks), enforce scheduled refresh SLA, assign named DRI, and document in Data Product Passport</span><span class="text-business">Give every critical file a named owner, automatic update schedule, and change history - so it is maintainable, auditable, and not tied to one person</span></li></ul></div>
+    </div>
+    <div class="two-col">
+      <div class="info-box"><div class="info-box-label warn">⚠ Key bottlenecks</div><ul><li>Single person dependency on every critical file</li><li>No automated data connection — all manual copy-paste</li><li>Logic embedded in formulas nobody else understands</li><li>No change control — errors introduced silently</li></ul></div>
+      <div class="info-box"><div class="info-box-label ok">✓ Iterative target state</div><ul><li>Automated data feed replaces manual extraction</li><li>Core metric logic in versioned, certified model</li><li>Excel retained as analysis surface — not data processor</li><li>Named owner, documented logic, scheduled refresh</li></ul></div>
+    </div>
+    <div class="card"><div style="font-size:11px;color:var(--slate);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">Positioning statement</div><div style="font-size:13px;color:var(--slate-2);font-style:italic;">"I can take your critical spreadsheets and rebuild the underlying logic properly — so the business process keeps running without the fragility and the key-person risk."</div></div>
+  </div>
+
+  <!-- AI -->
+  <div id="ep-ai" class="ep-panel">
+    <div class="ep-header">
+      <div class="ep-icon"><img src="icons/icon-ai-copilot.svg" alt="AI Copilot icon"></div>
+      <div>
+        <div class="ep-title">We're being told to use AI</div>
+        <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;"><span class="badge badge-slate">Emerging urgency</span><span class="badge badge-blue">Complexity: Structured build</span></div>
+        <div class="ep-pain">"Leadership wants us to use AI tools on our data but when we ask Copilot a question about revenue we get a different number every time."</div>
+      </div>
+    </div>
+    <div class="translation-toggle">
+      <span class="translation-label">Translation View</span>
+      <div class="translation-segment">
+        <button class="translation-btn" data-mode="business" onclick="setTranslationMode('business')">Business Translation</button>
+        <button class="translation-btn" data-mode="analytics" onclick="setTranslationMode('analytics')">Analytics Translation</button>
+      </div>
+    </div>
+    <div class="phases-grid">
+      <div class="phase-card"><div class="phase-num">Phase 01</div><div class="phase-title">Assess Current State</div><ul class="phase-list"><li><span class="text-analytics"><strong>AI output benchmarking</strong> - run a fixed set of natural language queries against the current data layer and document responses, inconsistency rates, and failure modes (hallucination, wrong measure resolution, incorrect filter context)</span><span class="text-business">Ask the AI the questions your business actually needs answered - and document what it returns, including when answers contradict each other</span></li><li><span class="text-analytics"><strong>Root-cause AI inconsistency analysis</strong> - distinguish between ambiguous measure names (NL resolution failure), missing measure descriptions (intent inference failure), multiple datasets queried (source ambiguity), and absent time intelligence (period resolution failure)</span><span class="text-business">Understand why the AI keeps giving different answers - whether it is guessing what "revenue" means, querying the wrong source, or misreading period terms like "last quarter"</span></li><li><span class="text-analytics"><strong>Semantic model AI-readiness audit</strong> - assess measure description coverage, semantic naming quality for tables and columns, synonym definitions, and Q&A linguistic schema completeness</span><span class="text-business">Check whether the model is labeled so AI can understand it - clear names, plain-English descriptions, and no technical shorthand</span></li><li><span class="text-analytics"><strong>Queried data layer profiling</strong> - evaluate null rates on key dimensions, referential integrity, grain consistency, and certified versus uncertified datasets within AI-accessible scope</span><span class="text-business">Check the quality of data AI is using - gaps, inconsistencies, or uncertified sources will produce unreliable answers</span></li><li><span class="text-analytics"><strong>AI use case taxonomy definition</strong> - classify target queries by type (aggregation, trend, ranking, diagnostic, predictive) and assess feasibility against current model capabilities</span><span class="text-business">Be specific about which business questions AI should answer first - narrowing scope is what makes a pilot succeed</span></li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 02</div><div class="phase-title">Define Target State</div><ul class="phase-list"><li><span class="text-analytics"><strong>AI acceptance criteria as fixed question set</strong> - pair each benchmark question with an expected answer validated against the certified semantic model and use this as a regression test suite</span><span class="text-business">Agree the exact questions AI must answer reliably - these become the test of whether implementation works</span></li><li><span class="text-analytics"><strong>AI-readiness checklist definition</strong> - require complete measure descriptions, semantic naming standards, certified dataset as sole AI source, populated Q&A linguistic schema, and operational time intelligence layer</span><span class="text-business">Define what "ready for AI" means in practice - not just connected tooling, but correct and consistent answers to core questions</span></li><li><span class="text-analytics"><strong>Pilot use case selection by feasibility-impact matrix</strong> - prioritize a single subject area, up to five certified measures, clear success metric, and existing model coverage; avoid multi-domain complexity in pilot</span><span class="text-business">Pick one narrow, visible question first - prove success before expanding scope</span></li><li><span class="text-analytics"><strong>Accuracy threshold definition per query type</strong> - require exact match for aggregation queries and tolerance bands for trend queries with documented acceptable variance</span><span class="text-business">Agree what "correct" means per question - exact values for some, acceptable ranges for others</span></li><li><span class="text-analytics"><strong>AI output governance framework</strong> - define validation DRI per subject area, spot-check sampling frequency, escalation path for anomalies, and integration with model certification cycle</span><span class="text-business">Agree who checks AI answers and how often - before outputs are used in decision-making</span></li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 03</div><div class="phase-title">Gaps & Bottlenecks</div><ul class="phase-list"><li><span class="text-analytics"><strong>Near-zero measure description coverage</strong> - NL engines rely on descriptions and synonyms for intent resolution; without them they fall back to ambiguous name matching</span><span class="text-business">AI does not know what the business means by "Revenue" - without definitions it guesses</span></li><li><span class="text-analytics"><strong>Technical naming conventions in model metadata</strong> - snake_case, system prefixes, and abbreviated codes reduce NL resolution quality and increase hallucination risk</span><span class="text-business">Data is labeled in developer shorthand - abbreviations and codes AI can easily misread</span></li><li><span class="text-analytics"><strong>Multiple conflicting datasets exposed to AI</strong> - no single certified authoritative model, causing non-deterministic source selection</span><span class="text-business">AI can pick from several overlapping sources unpredictably, so the same question can return different answers</span></li><li><span class="text-analytics"><strong>No marked date table or time intelligence measures</strong> - AI cannot resolve natural period language without CALCULATE-based measures and a configured date table</span><span class="text-business">Ask about period comparisons and AI either fails or returns unreliable results because time logic is missing</span></li><li><span class="text-analytics"><strong>No output validation layer</strong> - responses are not reconciled against certified values; no sampling framework, anomaly detection, or assigned DRI</span><span class="text-business">There is no process to verify whether AI answers are correct before they reach decision-makers</span></li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 04</div><div class="phase-title">Solution Steps</div><ul class="phase-list"><li><span class="text-analytics"><strong>Apply semantic naming conventions across model</strong> - rename tables, columns, and measures to business-readable terms; populate Q&A linguistic schema with synonyms and common query phrasing</span><span class="text-business">Relabel everything in plain business language so AI understands the same vocabulary your team uses</span></li><li><span class="text-analytics"><strong>Author measure descriptions for certified metrics</strong> - document business definition, grain, inclusions or exclusions, and date logic in plain English to support intent resolution</span><span class="text-business">Write plain-English definitions for each key metric so AI knows exactly which number to return</span></li><li><span class="text-analytics"><strong>Implement time intelligence layer</strong> - mark date table, build YoY, QoQ, MTD, YTD, and rolling-window measures, validate against fiscal calendar, and register period synonyms in Q&A schema</span><span class="text-business">Add reliable period comparison capability so AI can answer time-based questions accurately, not just return snapshots</span></li><li><span class="text-analytics"><strong>Restrict AI data scope to certified semantic model</strong> - remove raw dataset or warehouse access and configure Copilot or Fabric AI to query endorsed dataset only as a contract boundary</span><span class="text-business">Point AI only at trusted certified data so answers come from the same numbers your team already relies on</span></li><li><span class="text-analytics"><strong>Implement output validation protocol</strong> - assign DRI per subject area, define weekly sampling cadence, configure variance anomaly alerts, and fold checks into model certification review</span><span class="text-business">Set up recurring checks so AI answers are verified against certified numbers before they influence decisions</span></li></ul></div>
+    </div>
+    <div class="two-col">
+      <div class="info-box"><div class="info-box-label warn">⚠ Key bottlenecks</div><ul><li>AI queries ambiguous or unlabelled model objects</li><li>No single certified model — AI picks inconsistent sources</li><li>Time intelligence absent — no period comparisons</li><li>No human validation step for AI outputs</li></ul></div>
+      <div class="info-box"><div class="info-box-label ok">✓ Iterative target state</div><ul><li>All measures described in plain business language</li><li>AI connected exclusively to certified semantic model</li><li>Time intelligence fully operational</li><li>Pilot producing consistent, validated outputs</li></ul></div>
+    </div>
+    <div class="card"><div style="font-size:13px;color:var(--slate-2);font-style:italic;">"Your AI tools are only as good as the data model underneath them. I build the foundation that makes your AI investment actually work - instead of confidently giving you the wrong answer."</div></div>
+  </div>
+
+  <!-- GREENFIELD -->
+  <div id="ep-greenfield" class="ep-panel">
+    <div class="ep-header">
+      <div class="ep-icon"><img src="icons/icon-greenfield.svg" alt="Greenfield icon"></div>
+      <div>
+        <div class="ep-title">No real analytics capability at all</div>
+        <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;"><span class="badge badge-slate">Greenfield opportunity</span><span class="badge badge-red">Complexity: Full Stack</span></div>
+        <div class="ep-pain">"We spend two days before every board meeting manually pulling numbers from three systems. There's no consistency and leadership always challenges the figures."</div>
+      </div>
+    </div>
+    <div class="translation-toggle">
+      <span class="translation-label">Translation View</span>
+      <div class="translation-segment">
+        <button class="translation-btn" data-mode="business" onclick="setTranslationMode('business')">Business Translation</button>
+        <button class="translation-btn" data-mode="analytics" onclick="setTranslationMode('analytics')">Analytics Translation</button>
+      </div>
+    </div>
+    <div class="phases-grid">
+      <div class="phase-card"><div class="phase-num">Phase 01</div><div class="phase-title">Assess Current State</div><ul class="phase-list"><li><span class="text-analytics"><strong>Conduct requirements elicitation using structured discovery interviews</strong> - capture recurring analytical questions, report consumers, decision frequency, and current workaround patterns</span><span class="text-business">Talk to the people who need answers - find out what they ask every week, what they can't currently answer, and where reporting is slowing decisions down</span></li><li><span class="text-analytics"><strong>Source system discovery</strong> - catalogue available systems (ERP, CRM, HRIS, flat files), assess connection feasibility (API availability, ODBC/JDBC, export-only, manual), and identify data ownership</span><span class="text-business">Find out what data exists and whether it's actually reachable - some systems connect easily, others only through manual extracts</span></li><li><span class="text-analytics"><strong>Process archaeology</strong> - document the current-state reporting workflow end-to-end: source extraction steps, manual transformation logic, file handoffs, consolidation points, and rework loops</span><span class="text-business">Walk through exactly how reports are produced today - every manual step, every handoff, and where delays or errors get introduced</span></li><li><span class="text-analytics"><strong>Prioritise analytical gaps by business impact score</strong> - weight by decision frequency, stakeholder seniority, manual effort displaced, and revenue or risk exposure; use as anchor for MVP scope</span><span class="text-business">Find the one question or process that causes the most pain - the one that wastes the most time or blocks the most important decisions</span></li><li><span class="text-analytics"><strong>Assess user analytical maturity by persona</strong> - distinguish power users (comfortable with calculated fields, custom visuals), standard consumers (filter and slice only), and executive viewers</span><span class="text-business">Understand how comfortable different users are with data tools - so what gets built matches how people actually work</span></li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 02</div><div class="phase-title">Define Target State</div><ul class="phase-list"><li><span class="text-analytics"><strong>Convert question inventory to a model design brief</strong> - map each question to required dimensions, measures, and grain; use as acceptance criteria for each delivery phase</span><span class="text-business">Agree on the specific questions this needs to answer - and make those the test of whether each stage has worked</span></li><li><span class="text-analytics"><strong>Define MVP scope</strong> - minimum subject area coverage, minimum KPI set, and minimum sources required to answer the top 3-5 priority questions; design for iterative extension</span><span class="text-business">Agree on the smallest version that still gives you something genuinely useful - weeks to first value, not months</span></li><li><span class="text-analytics"><strong>Define phased delivery roadmap</strong> - sequence releases by dependency order, validate each phase against acceptance criteria before proceeding</span><span class="text-business">Agree on a delivery sequence where each stage builds on the last - so you're never waiting on a single big launch that keeps slipping</span></li><li><span class="text-analytics"><strong>Define success KPIs per delivery phase</strong> - active users, query volume, manual reporting hours displaced; instrument usage telemetry from day one</span><span class="text-business">Agree upfront on how you'll know it's working - time saved, people using it, decisions actually informed by it</span></li><li><span class="text-analytics"><strong>Define target state architecture</strong> - semantic model scope, self-service tier design by user persona, governance model, and explicit out-of-scope boundaries to prevent scope creep</span><span class="text-business">Agree on what the finished solution looks like - and equally what it won't cover - so expectations are set before the build starts</span></li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 03</div><div class="phase-title">Gaps & Bottlenecks</div><ul class="phase-list"><li><span class="text-analytics"><strong>No ELT pipeline or governed extraction layer</strong> - source systems accessible only through manual export; no staging environment, no extraction contracts, no schema documentation</span><span class="text-business">Every time you need numbers, someone has to manually pull them from each system separately - and the process is different each time, which is why the results never quite match</span></li><li><span class="text-analytics"><strong>No agreed analytics platform or toolchain</strong> - absence of decisions on warehouse, semantic layer, and consumption tool is creating delivery paralysis; platform selection should be timeboxed and driven by use-case requirements</span><span class="text-business">You've been waiting for a technology decision that doesn't need to happen before you start - the debate about which tools to use is what's keeping you stuck</span></li><li><span class="text-analytics"><strong>No Metric Dictionary or Business Glossary</strong> - KPI definitions undocumented; conflicting definitions risk being encoded into the model from day one</span><span class="text-business">Leadership challenges the figures every board meeting because there's no agreed definition - Revenue means something different to Finance than it does to Sales, and until that's resolved, any number you present is open to dispute</span></li><li><span class="text-analytics"><strong>No internal analytics capability</strong> - no owned semantic model, no trained power users, no knowledge transfer plan; every change requires external resourcing</span><span class="text-business">When this is built, you need someone internally who can own and update it - without that person, you'll be dependent on outside help for every small change</span></li><li><span class="text-analytics"><strong>No governance framework</strong> - no named data owner, no refresh SLA, no certification or change process; without these, user trust will not develop regardless of technical quality</span><span class="text-business">Unless ownership is established from day one, you'll be back in the same position in 12 months - numbers nobody fully trusts, maintained by nobody, updated only when someone remembers</span></li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 04</div><div class="phase-title">Solution Steps</div><ul class="phase-list"><li><span class="text-analytics"><strong>Phase 1</strong> - build extraction layer for top 3 source systems, minimal staging schema, core fact and dimension tables at agreed grain, certified semantic model with 3-5 KPIs, and first report validated against acceptance criteria</span><span class="text-business">Phase 1: Within 4-6 weeks, we want to stop spending two days before every board meeting - your core numbers are automated, consistent, and ready before you ask for them</span></li><li><span class="text-analytics"><strong>Phase 2</strong> - implement time intelligence layer, extend dimension model with additional attributes, hierarchies, and SCD handling, and validate against extended acceptance criteria</span><span class="text-business">Phase 2: You can now answer the follow-up questions without going back to source systems - trends over time, breakdowns by team or product, and the ability to drill into what's behind a number</span></li><li><span class="text-analytics"><strong>Phase 3</strong> - extend semantic model to additional subject areas, configure self-service layer with RLS by user persona, apply certified endorsement, and complete Metric Dictionary for all published measures</span><span class="text-business">Phase 3: Your team stops asking for new reports - they can explore the data themselves, and every number they use has a certified, agreed definition behind it</span></li><li><span class="text-analytics"><strong>Phase 4</strong> - deliver structured enablement by user tier, publish Data Product Passport and Handover Guide, assign DRI per subject area, and operationalise change management process</span><span class="text-business">Phase 4: The solution is yours - your team knows how to use it, someone owns it, and it can evolve without bringing in outside help every time something changes</span></li><li><span class="text-analytics"><strong>Iterative delivery model with defined acceptance criteria per phase</strong> - each release validated against the question inventory before proceeding; scope changes handled as backlog items</span><span class="text-business">You're not waiting 12 months for a big launch - every stage delivers something your team is already using before the next one begins</span></li></ul></div>
+    </div>
+    <div class="two-col">
+      <div class="info-box"><div class="info-box-label warn">⚠ Key bottlenecks</div><ul><li>No governed access to source data</li><li>No agreed metric definitions to build from</li><li>Risk of "big bang" approach — nothing for 12 months</li><li>No internal capability to maintain what's built</li></ul></div>
+      <div class="info-box"><div class="info-box-label ok">✓ Iterative target state</div><ul><li>Phase 1 live within 4–6 weeks: 3 sources, core KPIs</li><li>Metrics defined and certified before reporting goes live</li><li>Self-service layer operational by Phase 3</li><li>Internal champion identified and enabled</li></ul></div>
+    </div>
+    <div class="card"><div style="font-size:13px;color:var(--slate-2);font-style:italic;">"I can take you from manual spreadsheet chaos to a working analytics layer in a focused engagement — starting with the questions that matter most, not a two-year platform project."</div></div>
+  </div>
+
+  <!-- DOMAIN TEST -->
+  <div id="ep-domain" class="ep-panel">
+    <div class="ep-header">
+      <div class="ep-icon"><img src="icons/icon-translation-failure.SVG" alt="Translation failure icon"></div>
+      <div>
+        <div class="ep-title">"The last team built what they thought we needed. It wasn't."</div>
+        <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;"><span class="badge badge-slate">Business-IT disconnect</span><span class="badge badge-amber">Complexity: Diagnostic</span><span class="badge badge-slate">No build, assessment only</span></div>
+        <div class="ep-pain">"Our last dashboard looked great in the demo. Three months after go-live, everyone was back in Excel. The business never trusted the numbers enough to stop checking them manually. We don't have the appetite to go through that again.</div>
+      </div>
+    </div>
+    <div class="translation-toggle">
+      <span class="translation-label">Translation View</span>
+      <div class="translation-segment">
+        <button class="translation-btn" data-mode="business" onclick="setTranslationMode('business')">Business Translation</button>
+        <button class="translation-btn" data-mode="analytics" onclick="setTranslationMode('analytics')">Analytics Translation</button>
+      </div>
+    </div>
+    <div class="phases-grid">
+      <div class="phase-card"><div class="phase-num">Phase 01</div><div class="phase-title">Assess Current State</div><ul class="phase-list"><li><span class="text-analytics"><strong>Current-state process mapping via elicitation</strong> - establish end-to-end data acquisition workflow, identify manual touchpoints, and surface undocumented transformation steps the stakeholder has normalised</span><span class="text-business">You're asked to walk through your actual weekly reporting process - not what it's supposed to look like, but what actually happens - because that gap is usually where the real problem lives</span></li><li><span class="text-analytics"><strong>Analytical capability gap identification</strong> - surface unmet decision-support requirements not captured in formal requirements documentation; often reveals actual scope vs presented scope</span><span class="text-business">"What question do you most wish you could answer but can't?" - that usually surfaces requirements the previous project never captured, because the people writing the brief never thought to ask it</span></li><li><span class="text-analytics"><strong>Trust deficit assessment</strong> - identify the most recent analytical failure event; root-cause as data quality, metric definition, or stakeholder credibility gap; use as a proxy for the depth of the trust problem</span><span class="text-business">"When was the last time a number was challenged in a meeting?" - that question locates the exact moment trust broke down, and whether it was ever properly acknowledged or just quietly absorbed</span></li><li><span class="text-analytics"><strong>Decision-action linkage audit</strong> - assess whether analytical outputs are connected to specific decisions or consumed as information only; distinguish descriptive from prescriptive reporting maturity</span><span class="text-business">Find out whether the current numbers are actually driving decisions - or just describing situations nobody knows how to act on - because a dashboard that only explains is one people eventually stop opening</span></li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 02</div><div class="phase-title">Define Target (Together)</div><ul class="phase-list"><li><span class="text-analytics"><strong>Requirements decomposition</strong> - shift elicitation from output specification (report format, requested KPIs) to decision decomposition (decision type, frequency, owner, data inputs required, acceptable latency)</span><span class="text-business">The previous project started with "what should the dashboard show?" - this one starts with "what decisions are you trying to make?" - that single shift changes everything that follows</span></li><li><span class="text-analytics"><strong>Metric ownership assignment</strong> - establish DRI accountability for business rule definition per KPI; document in Metric Dictionary; position the analytical layer as translation medium, not definition authority</span><span class="text-business">Before any number is built, agree who owns what it means - the business defines the rules, the analyst encodes them - so when a number is challenged there's no ambiguity about where to go</span></li><li><span class="text-analytics"><strong>Acceptance criteria definition</strong> - establish a minimum viable question set as functional requirements; each question maps to a specific decision, data source, and metric definition; use as scope anchor and delivery gate</span><span class="text-business">Agree on three specific questions this engagement must be able to answer - not a wish list - three questions that, if answered reliably, would genuinely change how decisions get made</span></li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 03</div><div class="phase-title">Surface Real Gaps</div><ul class="phase-list"><li><span class="text-analytics"><strong>Metric definition decomposition</strong> - test whether the KPI is sufficiently specified for unambiguous implementation: grain, inclusions, exclusions, date logic, and edge-case treatment</span><span class="text-business">"Is revenue gross or net? Before rebates?" - the moment you ask the second question, you find out whether Revenue is a shared definition or a word everyone has assumed means the same thing</span></li><li><span class="text-analytics"><strong>Source-of-truth reconciliation test</strong> - assess whether primary data sources would produce the same output for the same question; identify the existence and depth of data trust gaps without running a formal reconciliation</span><span class="text-business">Ask whether the ERP and the spreadsheet would give you the same revenue figure - because if two sources your team already uses can't agree, that's the problem to solve before any dashboard is built</span></li><li><span class="text-analytics"><strong>Data ownership and escalation path assessment</strong> - identify whether a DRI exists per metric, whether a documented resolution process exists for data quality issues, and whether the stakeholder has an accountable counterpart</span><span class="text-business">"Who would you call if this number was wrong?" - that question almost always produces a pause, and the pause is the answer: either someone owns the number, or nobody does</span></li></ul></div>
+      <div class="phase-card"><div class="phase-num">Phase 04</div><div class="phase-title">Reposition & Propose</div><ul class="phase-list"><li><span class="text-analytics"><strong>Diagnostic classification</strong> - map discovery findings to the appropriate entry point framework; document presenting problem, root cause hypothesis, and recommended starting sequence</span><span class="text-business">By the end of the diagnostic engagement, you and the consultant have a shared name for the actual problem and a clear point of entry for solving it</span></li><li><span class="text-analytics"><strong>Scoped engagement proposal</strong> - define a time-boxed diagnostic phase (discovery + POC) before committing to full build, with scope defined by the question set rather than a feature list</span><span class="text-business">What you walk away with is not a quote for a project - it's a proposal for a short, bounded diagnostic that proves direction before major investment</span></li><li><span class="text-analytics"><strong>Discovery artefact</strong> - produce a jointly authored problem statement capturing current state in business language, root cause hypothesis, the three agreed questions, and proposed success criteria</span><span class="text-business">You leave with a written statement describing your problem in your own language - agreed by both sides before any delivery starts</span></li><li><span class="text-analytics"><strong>Engagement model definition</strong> - formalise the division of responsibility: business owns metric definitions, business rules, and acceptance criteria; consultant owns translation into model and delivery structure</span><span class="text-business">Before anything is built, the working relationship is made explicit: you define what the numbers mean, and the consultant translates that into an analytical solution</span></li></ul></div>
+    </div>
+    <div class="two-col">
+      <div class="info-box">
+        <div class="info-box-label warn">⚠ Key bottlenecks</div>
+        <ul>
+          <li>The people who defined the requirements weren't the people who felt the problem - so the brief was wrong before the build started</li>
+          <li>Everyone described their piece of the process, nobody described the whole - leaving the biggest inefficiencies invisible and unaddressed</li>
+          <li>The build fixed what was asked for, not what was actually broken - and what was actually broken was often one step upstream or downstream</li>
+          <li>Developers optimised the current state rather than questioning whether the current state was worth keeping</li>
+        </ul>
+      </div>
+      <div class="info-box">
+        <div class="info-box-label ok">✓ Iterative target state</div>
+        <ul>
+          <li>Requirements gathered across the full stakeholder map - not just the loudest voice in the room - so the brief reflects the actual problem, not the presented one</li>
+          <li>End-to-end process walkthrough before any build begins - because the highest-value improvement is rarely where our conversation started</li>
+          <li>Every request assessed against the full workflow: what feeds it, what follows it, and what breaks if it changes</li>
+          <li>Current state treated as a reference point, not a starting point - the question is always what the business needs, not what the system already does</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card" style="margin-top:4px;"><div style="font-size:13px;color:var(--slate-2);font-style:italic;">"I'm not the domain expert — you are. My job is to ask the questions that turn your business knowledge into a data model that actually reflects how your business works. That's a different skill from knowing your industry."</div></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     DELIVERY METHODOLOGY
+══════════════════════════════════════════════ -->
+<section id="methodology" class="section">
+  <div class="section-hero">
+    <div class="section-eyebrow">Marcin Duda · Analytics Translator</div>
+    <h2 class="section-title">Four stages, six artefacts, every engagement</h2>
+    <p class="section-lead">The same cadence applies regardless of entry point. The content of each stage differs by complexity. Documentation is built into the rhythm — not deferred to the end. Nothing becomes a black box.</p>
+  </div>
+
+  <div class="block-label">Delivery Cadence</div>
+  <div class="delivery-stages">
+    <div class="delivery-stage">
+      <div class="stage-num">01</div>
+      <div class="stage-title">Discover</div>
+      <div class="stage-timing">1–5 days</div>
+      <div class="stage-desc">Structured conversations using entry-point diagnostic questions. No tools yet — understand the problem, not the solution.</div>
+      <div class="stage-output"><strong>Output</strong>Current state in business language. Top 3 gaps. Target state as answerable questions. Proposed scope.</div>
+    </div>
+    <div class="delivery-stage">
+      <div class="stage-num">02</div>
+      <div class="stage-title">POC</div>
+      <div class="stage-timing">1–2 weeks</div>
+      <div class="stage-desc">Real but sampled data. Core model skeleton and 1–2 most important KPIs. Clickable prototype for business validation.</div>
+      <div class="stage-output"><strong>Output</strong>Working prototype. First draft Metric Dictionary and Data Map. Business confirms model reflects their logic.</div>
+    </div>
+    <div class="delivery-stage">
+      <div class="stage-num">03</div>
+      <div class="stage-title">Build</div>
+      <div class="stage-timing">1–8 weeks</div>
+      <div class="stage-desc">Full data, complete model, key reports. Delivered in sub-releases — not a single handover. Model Specification produced.</div>
+      <div class="stage-output"><strong>Output</strong>Production model. Complete reporting layer. Model Specification. First Handover Guide. Data Product Passport.</div>
+    </div>
+    <div class="delivery-stage">
+      <div class="stage-num">04</div>
+      <div class="stage-title">Embed</div>
+      <div class="stage-timing">Ongoing</div>
+      <div class="stage-desc">Iterative enhancements. Additional reports and analytical capabilities. Documentation evolves with model.</div>
+      <div class="stage-output"><strong>Output</strong>Enhanced model iterations. Updated artefacts. Trained users. Versioned metric changes communicated to consumers.</div>
+    </div>
+  </div>
+
+  <div class="block-label">The Fixed Artefact Set</div>
+  <div class="artefact-grid">
+    <div class="artefact-card">
+      <div class="artefact-num">ARTEFACT 01</div>
+      <div class="artefact-name">Discovery Summary</div>
+      <div class="artefact-when">Produced: end of Discover stage</div>
+      <div class="artefact-desc">One page. Current state in business language — not technical architecture. Top three gaps. Target state as a set of business questions the solution will be able to answer. The scoping contract.</div>
+    </div>
+    <div class="artefact-card">
+      <div class="artefact-num">ARTEFACT 02</div>
+      <div class="artefact-name">Metric Dictionary</div>
+      <div class="artefact-when">Built: POC stage · Maintained: forever</div>
+      <div class="artefact-desc">Plain English name, business definition (words not DAX), origin type (upstream/domain/hybrid), owner, exclusions, date logic, version. Business users cerify this. Eliminates the Finance vs Operations problem.</div>
+    </div>
+    <div class="artefact-card">
+      <div class="artefact-num">ARTEFACT 03</div>
+      <div class="artefact-name">Data Map</div>
+      <div class="artefact-when">Produced: POC · Updated: Build stage</div>
+      <div class="artefact-desc">Business-readable flow from source system through transformation to report surface. Not a technical ERD. Answers "where does this number come from?" without a developer. Anti-black-box document.</div>
+    </div>
+    <div class="artefact-card">
+      <div class="artefact-num">ARTEFACT 04</div>
+      <div class="artefact-name">Model Specification</div>
+      <div class="artefact-when">Produced: start of Build stage</div>
+      <div class="artefact-desc">Translates Metric Dictionary and Data Map into what needs to be built: fact tables, dimensions, key measures, time intelligence requirements, refresh schedule, RLS needs. Technical handoff that a business-literate reader can follow.</div>
+    </div>
+    <div class="artefact-card">
+      <div class="artefact-num">ARTEFACT 05</div>
+      <div class="artefact-name">Handover Guide</div>
+      <div class="artefact-when">Produced: end of every iteration</div>
+      <div class="artefact-desc">One page per report or model component. Answers: "How do I navigate this?", "How do I know the data is current?", "What do I do if something looks wrong?" Replaces implicit knowledge. Updated every iteration.</div>
+    </div>
+    <div class="artefact-card" style="border-top-color:var(--green);">
+      <div class="artefact-num" style="color:var(--green);">ARTEFACT 06 · DATA MESH</div>
+      <div class="artefact-name">Data Product Passport</div>
+      <div class="artefact-when">Produced: Build stage · gate before Embed</div>
+      <div class="artefact-desc">Product name/version, owning domain, covered subject areas, consumption interfaces, refresh SLA, data quality indicators, metric ownership summary, known limitations. Front page of the product in the data catalogue.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     COMMON LAYER
+══════════════════════════════════════════════ -->
+<section id="common" class="section">
+  <div class="section-hero">
+    <div class="section-eyebrow">Marcin Duda · Analytics Translator</div>
+    <h2 class="section-title">Present in every entry point.<br>Complexity varies — the need does not.</h2>
+    <p class="section-lead">Six components appear in every engagement regardless of entry point. The shape, governance formality, and technical depth differ by complexity. The requirement to address them does not disappear.</p>
+  </div>
+
+  <div class="common-grid">
+    <div class="common-card">
+      <div class="common-icon">🧊</div>
+      <div class="common-title">Semantic / Data Model</div>
+      <div class="common-desc">Every solution requires at least a minimal data model — from a single Power BI dataset to a full SSAS Tabular enterprise model. The grain, shape, and governance formality differ; the need does not.</div>
+    </div>
+    <div class="common-card">
+      <div class="common-icon">📐</div>
+      <div class="common-title">Metric Definition</div>
+      <div class="common-desc">Every engagement surfaces at least one metric defined differently in different places. Agreeing and encoding the canonical definition is always a deliverable, regardless of entry point.</div>
+    </div>
+    <div class="common-card">
+      <div class="common-icon">📅</div>
+      <div class="common-title">Date / Time Intelligence</div>
+      <div class="common-desc">A shared, governed date table with consistent period logic (YoY, MTD, rolling) is required in every delivery that produces business reporting. It is almost always missing or inconsistent in the current state.</div>
+    </div>
+    <div class="common-card">
+      <div class="common-icon">🔄</div>
+      <div class="common-title">Refresh & Pipeline</div>
+      <div class="common-desc">Every current state has a data freshness problem — manual, broken, or non-existent automation. The complexity of the fix ranges from a scheduled Power Query refresh to a full ELT pipeline.</div>
+    </div>
+    <div class="common-card">
+      <div class="common-icon">🛡️</div>
+      <div class="common-title">Trust & Governance</div>
+      <div class="common-desc">Users do not trust what they cannot verify. Every delivery must address certification, data lineage visibility, and documented ownership — or adoption will not follow, regardless of technical quality.</div>
+    </div>
+    <div class="common-card">
+      <div class="common-icon">🎓</div>
+      <div class="common-title">User Enablement</div>
+      <div class="common-desc">Handing over a model or dashboard without structured enablement produces low adoption. Every delivery includes at minimum a navigation guide and a short structured handover session.</div>
+    </div>
+  </div>
+
+  <div class="block-label">How Common Layer Complexity Scales by Entry Point</div>
+  <div class="card" style="padding:0;overflow:hidden;">
+    <table class="c-table">
+      <thead>
+        <tr>
+          <th>Component</th>
+          <th>Dashboard</th>
+          <th>Disconnected</th>
+          <th>Spreadsheet</th>
+          <th>AI Ready</th>
+          <th>Greenfield</th>
+          <th>Translation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Data model complexity</td><td><span class="pip pip-lo"></span></td><td><span class="pip pip-hi"></span></td><td><span class="pip pip-mid"></span></td><td><span class="pip pip-mid"></span></td><td><span class="pip pip-hi"></span></td><td><span class="pip pip-empty"></span></td></tr>
+        <tr><td>Pipeline / ETL work</td><td><span class="pip pip-lo"></span></td><td><span class="pip pip-hi"></span></td><td><span class="pip pip-mid"></span></td><td><span class="pip pip-lo"></span></td><td><span class="pip pip-hi"></span></td><td><span class="pip pip-empty"></span></td></tr>
+        <tr><td>Metric definition work</td><td><span class="pip pip-mid"></span></td><td><span class="pip pip-hi"></span></td><td><span class="pip pip-mid"></span></td><td><span class="pip pip-hi"></span></td><td><span class="pip pip-hi"></span></td><td><span class="pip pip-hi"></span></td></tr>
+        <tr><td>Time intelligence</td><td><span class="pip pip-mid"></span></td><td><span class="pip pip-mid"></span></td><td><span class="pip pip-lo"></span></td><td><span class="pip pip-mid"></span></td><td><span class="pip pip-mid"></span></td><td><span class="pip pip-empty"></span></td></tr>
+        <tr><td>Governance formality</td><td><span class="pip pip-mid"></span></td><td><span class="pip pip-hi"></span></td><td><span class="pip pip-mid"></span></td><td><span class="pip pip-mid"></span></td><td><span class="pip pip-hi"></span></td><td><span class="pip pip-empty"></span></td></tr>
+        <tr><td>User enablement</td><td><span class="pip pip-lo"></span></td><td><span class="pip pip-mid"></span></td><td><span class="pip pip-lo"></span></td><td><span class="pip pip-mid"></span></td><td><span class="pip pip-hi"></span></td><td><span class="pip pip-mid"></span></td></tr>
+      </tbody>
+    </table>
+    <div class="complexity-legend">
+      <span class="complexity-legend-item"><span class="pip pip-lo" aria-hidden="true"></span><span class="complexity-legend-text"><strong>Quick win</strong><span>Low complexity</span></span></span>
+      <span class="complexity-legend-item"><span class="pip pip-mid" aria-hidden="true"></span><span class="complexity-legend-text"><strong>Structured build</strong><span>Moderate complexity</span></span></span>
+      <span class="complexity-legend-item"><span class="pip pip-hi" aria-hidden="true"></span><span class="complexity-legend-text"><strong>Platform build</strong><span>High complexity</span></span></span>
+      <span class="complexity-legend-item"><span class="pip pip-empty" aria-hidden="true"></span><span class="complexity-legend-text"><strong>Diagnostic</strong><span>No build, assessment only</span></span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     METRIC OWNERSHIP
+══════════════════════════════════════════════ -->
+<section id="metrics" class="section">
+  <div class="section-hero">
+    <div class="section-eyebrow">Marcin Duda · Analytics Translator</div>
+    <h2 class="section-title">Not all metrics are<br>owned the same way</h2>
+    <p class="section-lead">The reconciliation path runs in opposite directions depending on metric origin type. Conflating these in documentation is one of the most common causes of the Finance vs Operations problem at the metric level.</p>
+  </div>
+
+  <div class="block-label">The Three Origin Types</div>
+  <div class="metric-types">
+    <div class="metric-type-card upstream">
+      <div class="mt-header"><span class="mt-icon">⬇️</span><span class="mt-label">Upstream-Certified</span></div>
+      <div class="mt-title">Calculated and owned externally</div>
+      <div class="mt-desc">Delivered via a feed or report from a system or function outside this domain. The domain is a <em>consumer</em>, not an owner. Examples: LCR ratio from regulatory system, RWA from credit risk engine, intercompany funding rates from central TMS.</div>
+      <div class="mt-rule">Reconciliation direction: YOUR model → upstream system.<br>If they differ, the upstream is right until proven otherwise.</div>
+    </div>
+    <div class="metric-type-card domain">
+      <div class="mt-header"><span class="mt-icon">🔧</span><span class="mt-label">Domain-Derived</span></div>
+      <div class="mt-title">Defined and calculated within this domain</div>
+      <div class="mt-desc">Built from source field values the domain controls or has direct access to. The domain <em>is</em> the owner. Examples: Net FTP from internal spread calculation, liquidity buffer utilisation from position data, concentration of funding by counterparty.</div>
+      <div class="mt-rule">Reconciliation direction: downstream consumers → YOUR model.<br>This model is the golden source. Defend it with the Metric Dictionary.</div>
+    </div>
+    <div class="metric-type-card hybrid">
+      <div class="mt-header"><span class="mt-icon">⚗️</span><span class="mt-label">Upstream + Domain-Adjusted</span></div>
+      <div class="mt-title">The most dangerous — looks certified but isn't</div>
+      <div class="mt-desc">Starts as an upstream figure but has a local adjustment applied (management overlay, different perimeter, entity exclusion). Consumers assume it matches the upstream — it doesn't, by design. Must be flagged explicitly.</div>
+      <div class="mt-rule">Document both: upstream source AND adjustment logic.<br>State explicitly: "Will not match upstream. Expected variance: [desc]."</div>
+    </div>
+  </div>
+
+  <div class="block-label">Metric Dictionary — Structure & Sample</div>
+  <div class="card" style="padding:0;overflow:hidden;margin-bottom:20px;">
+    <table class="dict-table">
+      <thead>
+        <tr>
+          <th>Metric Name</th>
+          <th>Origin</th>
+          <th>Business Definition</th>
+          <th>Owner / Golden Source</th>
+          <th>Date Logic</th>
+          <th>Exclusions</th>
+          <th>Version</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="metric-name">LCR Ratio</td>
+          <td><span class="origin-tag uc">UPSTREAM</span></td>
+          <td>Liquidity Coverage Ratio as reported by the regulatory system. HQLA ÷ Net Cash Outflows over 30-day stress period.</td>
+          <td>Regulatory Reporting System · Risk function</td>
+          <td>Reporting date (T)</td>
+          <td>None — use as received</td>
+          <td>v1.0</td>
+        </tr>
+        <tr>
+          <td class="metric-name">Net FTP Spread</td>
+          <td><span class="origin-tag dd">DOMAIN</span></td>
+          <td>Difference between the internal transfer price rate assigned to a product and the actual cost of funds for that tenor, expressed in basis points.</td>
+          <td>Treasury Analytics model · Treasury team</td>
+          <td>Trade origination date</td>
+          <td>Excludes intercompany trades flagged IC=Y</td>
+          <td>v2.1</td>
+        </tr>
+        <tr>
+          <td class="metric-name">Liquidity Buffer (Mgmt)</td>
+          <td><span class="origin-tag ha">HYBRID</span></td>
+          <td>Regulatory HQLA pool with management adjustments: excludes pledged assets not available for same-day monetisation and adds uncommitted but operationally available reserves.</td>
+          <td>Base: Regulatory System · Adjustment: Treasury team</td>
+          <td>End of business day</td>
+          <td>Pledged assets, restricted reserves</td>
+          <td>v1.3</td>
+        </tr>
+        <tr>
+          <td class="metric-name">Funding Concentration</td>
+          <td><span class="origin-tag dd">DOMAIN</span></td>
+          <td>Top-10 counterparty funding as % of total wholesale funding. Identifies single-name concentration risk in the funding base.</td>
+          <td>Treasury Analytics model · Treasury team</td>
+          <td>As-at date (snap)</td>
+          <td>Retail deposits excluded; intragroup excluded</td>
+          <td>v1.0</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div style="font-size:13px;font-weight:600;color:var(--white);margin-bottom:10px;">Why this distinction is the anti-black-box mechanism</div>
+    <div style="font-size:13px;color:var(--slate-2);line-height:1.6;">Most BI deliveries treat all numbers as equally opaque — users don't know where they come from, who owns them, or what to do when they're challenged. Making ownership and reconciliation paths visible — and differentiating them by origin type — is the structural mechanism that converts a model from a black box into a governed data product. When a number is challenged in a board meeting, the owner, the golden source, and the reconciliation path are all documented. The conversation moves from "which number is right?" to "which definition are we applying, and why?"</div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     DATA MESH
+══════════════════════════════════════════════ -->
+<section id="datamesh" class="section">
+  <div class="section-hero">
+    <div class="section-eyebrow">Marcin Duda · Analytics Translator</div>
+    <h2 class="section-title">Additive framing,<br>not architectural replacement</h2>
+    <p class="section-lead">Data mesh is an ownership and governance principle, not a technology pattern. The delivery methodology and technical architecture remain intact. What changes is how ownership, interfaces, and governance are framed around them.</p>
+  </div>
+
+  <div class="block-label">Core Data Mesh Principles — How They Map</div>
+  <div class="mesh-principles">
+    <div class="mesh-card">
+      <div class="mesh-card-label">Principle 1</div>
+      <div class="mesh-card-title">Domain Ownership of Data</div>
+      <div class="mesh-card-desc">The domain that best understands the data owns it end-to-end — pipeline, quality, SLAs, and versioning. In the delivery methodology this shifts the Discover question: "Who currently owns the data between source and consumption — and is that the right team?" The answer shapes whether you're enabling a central IT function or a domain-owned product.</div>
+    </div>
+    <div class="mesh-card">
+      <div class="mesh-card-label">Principle 2</div>
+      <div class="mesh-card-title">Data as a Product</div>
+      <div class="mesh-card-desc">Data has a defined interface, named consumers, quality SLAs, and a published specification — just like software. The semantic model is not a BI layer; it is the queryable interface of the data product. The Data Product Passport (Artefact 06) is the published specification. Versioning discipline in the Metric Dictionary makes it behave like a software API.</div>
+    </div>
+    <div class="mesh-card">
+      <div class="mesh-card-label">Principle 3</div>
+      <div class="mesh-card-title">Self-Serve Data Platform</div>
+      <div class="mesh-card-desc">Consumers connect to the product's interface without needing to understand the warehouse underneath. The certified semantic model — with named measures, described dimensions, and documented RLS — is that interface. AI tools connect here too, which is why the AI entry point is directly improved by data mesh discipline.</div>
+    </div>
+    <div class="mesh-card">
+      <div class="mesh-card-label">Principle 4</div>
+      <div class="mesh-card-title">Federated Computational Governance</div>
+      <div class="mesh-card-desc">Global standards, local ownership. The Metric Ownership Model (upstream/domain/hybrid classification) is the governance instrument that makes this operational. Conformed metrics (like a shared date table or agreed entity definitions) are the global standards. Domain-derived metric definitions are local ownership in action.</div>
+    </div>
+  </div>
+
+  <div class="block-label">What Changes in the Methodology — Additive Only</div>
+  <div class="card" style="padding:0;overflow:hidden;margin-bottom:20px;">
+    <table class="change-table">
+      <thead>
+        <tr>
+          <th>Stage / Artefact</th>
+          <th>Change Type</th>
+          <th>What Changes</th>
+          <th>What Stays the Same</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="change-what">Discover stage</td><td><span class="change-scope scope-add">ADD</span></td><td>Add ownership question: "Who owns this data between source and consumption — and is that right?"</td><td>All other diagnostic questions unchanged</td></tr>
+        <tr><td class="change-what">POC stage</td><td><span class="change-scope scope-frame">REFRAME</span></td><td>Mock data / sample data used explicitly as contract validation — does the model produce correct outputs against known inputs?</td><td>POC scope, timing, and deliverable unchanged</td></tr>
+        <tr><td class="change-what">Build stage</td><td><span class="change-scope scope-gate">GATE</span></td><td>Data contract formalised as delivery gate before publishing. Nothing goes to self-service until contract is agreed.</td><td>Build sequence, model architecture unchanged</td></tr>
+        <tr><td class="change-what">Metric Dictionary</td><td><span class="change-scope scope-add">ADD</span></td><td>Version column + "last changed" field on every measure entry. Downstream consumers notified on definition change.</td><td>All existing fields unchanged</td></tr>
+        <tr><td class="change-what">Embed stage</td><td><span class="change-scope scope-frame">REFRAME</span></td><td>Every measure change is a version increment. Consumer notification is part of the iteration process, not optional.</td><td>Iteration cadence, enhancement process unchanged</td></tr>
+        <tr><td class="change-what">Artefact 06 (new)</td><td><span class="change-scope scope-add">ADD</span></td><td>Data Product Passport produced at Build stage. Contains metric ownership summary, consumption interfaces, SLA, known limitations.</td><td>Artefacts 01–05 unchanged in purpose and format</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+</main>
+
+</div><!-- /.app-body -->
+
+<!-- ── COPYRIGHT FOOTER ── -->
+<footer class="copyright-bar">
+  <div class="copyright-left">
+    <svg class="footer-md-logo" viewBox="0 0 120 120" width="36" height="36" xmlns="http://www.w3.org/2000/svg" aria-label="Marcin Duda logo" role="img">
+      <rect width="120" height="120" rx="18" fill="#0d1b2a"/>
+      <line x1="14" y1="68" x2="108" y2="68" stroke="#1a2e45" stroke-width="0.7"/>
+      <line x1="14" y1="46" x2="108" y2="46" stroke="#1a2e45" stroke-width="0.7"/>
+      <line x1="14" y1="24" x2="108" y2="24" stroke="#1a2e45" stroke-width="0.7"/>
+      <polyline points="16,82 24,76 32,72 40,66 48,62 56,55 64,50 72,44" fill="none" stroke="#4a9fd4" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
+      <polygon points="72,44 80,38 88,31 96,26 104,20 104,32 96,38 88,44 80,48 72,52" fill="#e8a020" opacity="0.10"/>
+      <polyline points="72,44 80,38 88,31 96,26 104,20" fill="none" stroke="#e8a020" stroke-width="0.9" stroke-dasharray="3 2" stroke-linecap="round" opacity="0.55"/>
+      <polyline points="72,52 80,48 88,44 96,38 104,32" fill="none" stroke="#e8a020" stroke-width="0.9" stroke-dasharray="3 2" stroke-linecap="round" opacity="0.35"/>
+      <polyline points="72,48 80,43 88,37 96,32 104,26" fill="none" stroke="#e8a020" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.75"/>
+      <line x1="72" y1="38" x2="72" y2="86" stroke="#e8a020" stroke-width="0.7" stroke-dasharray="2 3" opacity="0.3"/>
+      <line x1="22" y1="58" x2="22" y2="82" stroke="#8fa8c0" stroke-width="0.9" opacity="0.45"/>
+      <rect x="19" y="66" width="6" height="12" rx="1.2" fill="#3aad7a" opacity="0.65"/>
+      <line x1="31" y1="54" x2="31" y2="80" stroke="#8fa8c0" stroke-width="0.9" opacity="0.45"/>
+      <rect x="28" y="62" width="6" height="14" rx="1.2" fill="#e05555" opacity="0.55"/>
+      <line x1="40" y1="44" x2="40" y2="76" stroke="#8fa8c0" stroke-width="0.9" opacity="0.45"/>
+      <rect x="37" y="52" width="6" height="18" rx="1.2" fill="#3aad7a" opacity="0.65"/>
+      <line x1="50" y1="50" x2="50" y2="76" stroke="#8fa8c0" stroke-width="0.9" opacity="0.45"/>
+      <rect x="47" y="58" width="6" height="12" rx="1.2" fill="#e05555" opacity="0.45"/>
+      <line x1="14" y1="10" x2="14" y2="90" stroke="#2a4060" stroke-width="1.2" stroke-linecap="round"/>
+      <line x1="14" y1="90" x2="108" y2="90" stroke="#2a4060" stroke-width="1.2" stroke-linecap="round"/>
+      <circle cx="14" cy="90" r="2.8" fill="#e8a020"/>
+      <path d="M16 88 L16 18 L37 52 L58 18 L58 88" fill="none" stroke="#f5f8fa" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+      <path d="M64 18 L64 88 L76 88 Q106 88 106 53 Q106 18 76 18 Z" fill="none" stroke="#e8a020" stroke-width="3" stroke-linejoin="round"/>
+    </svg>
+    <div>
+      <div class="copyright-name">Marcin Duda <span>· Analytics Translator</span></div>
+      <div class="copyright-notice">
+        © 2026 Marcin Duda. All rights reserved.<br>
+        This framework, its structure, terminology, and content are the intellectual property of Marcin Duda.<br>
+        No part may be reproduced, distributed, or used in derivative works without prior written permission.
+      </div>
+    </div>
+  </div>
+  <div class="copyright-right">
+    <strong>Last-Mile Analytics Framework</strong><br>
+    Entry Point Model · Delivery Methodology · Metric Ownership Model<br>
+    Data Mesh Alignment · Common Layer Architecture<br>
+    <span class="ip-badge">⚿ Proprietary IP · Not for redistribution</span>
+  </div>
+</footer>
+
+</div><!-- /.app -->
+</div>
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  document.querySelector('.main').scrollTop = 0;
+}
+
+function showEP(id, btn) {
+  document.querySelectorAll('.ep-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.ep-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('ep-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function setTranslationMode(mode) {
+  document.body.setAttribute('data-translation-mode', mode);
+  document.querySelectorAll('.translation-btn').forEach(t => {
+    t.classList.toggle('active', t.dataset.mode === mode);
+  });
+}
+
+setTranslationMode('business');
+</script>
+</body>
+</html>
+
