@@ -143,6 +143,28 @@ body {
   max-width: 680px;
 }
 
+.identity-card {
+  background: rgba(232,160,32,.06);
+  border: 1px solid rgba(232,160,32,.28);
+  border-radius: var(--radius);
+  padding: 24px 28px;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.profile-photo {
+  width: 196px;
+  height: 196px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid rgba(74,159,212,.55);
+  box-shadow: 0 0 0 4px rgba(74,159,212,.16);
+  display: block;
+  flex-shrink: 0;
+}
+
 /* ── CARDS & GRIDS ── */
 .card {
   background: var(--navy-2);
@@ -721,6 +743,8 @@ body[data-translation-mode="business"] #ep-sprawl .phase-list li {
   .section-title { font-size: 24px; }
   .copyright-bar { flex-direction: column; align-items: flex-start; }
   .copyright-right { text-align: left; }
+  .identity-card { flex-direction: column; align-items: center; text-align: left; }
+  .profile-photo { width: 132px; height: 132px; }
 }
 
 /* ── ANIMATIONS ── */
@@ -870,28 +894,8 @@ body[data-translation-mode="business"] #ep-sprawl .phase-list li {
   </div>
 
   <!-- Identity card -->
-  <div style="background:rgba(232,160,32,.06);border:1px solid rgba(232,160,32,.28);border-radius:var(--radius);padding:24px 28px;margin-bottom:28px;display:flex;align-items:flex-start;gap:20px;">
-    <svg viewBox="0 0 120 120" width="52" height="52" xmlns="http://www.w3.org/2000/svg" aria-label="Marcin Duda logo" role="img" style="display:block;flex-shrink:0;">
-      <rect width="120" height="120" rx="18" fill="#0d1b2a"/>
-      <line x1="14" y1="68" x2="108" y2="68" stroke="#1a2e45" stroke-width="0.7"/>
-      <line x1="14" y1="46" x2="108" y2="46" stroke="#1a2e45" stroke-width="0.7"/>
-      <line x1="14" y1="24" x2="108" y2="24" stroke="#1a2e45" stroke-width="0.7"/>
-      <polyline points="16,82 24,76 32,72 40,66 48,62 56,55 64,50 72,44" fill="none" stroke="#4a9fd4" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
-      <polygon points="72,44 80,38 88,31 96,26 104,20 104,32 96,38 88,44 80,48 72,52" fill="#e8a020" opacity="0.10"/>
-      <polyline points="72,44 80,38 88,31 96,26 104,20" fill="none" stroke="#e8a020" stroke-width="0.9" stroke-dasharray="3 2" stroke-linecap="round" opacity="0.55"/>
-      <polyline points="72,52 80,48 88,44 96,38 104,32" fill="none" stroke="#e8a020" stroke-width="0.9" stroke-dasharray="3 2" stroke-linecap="round" opacity="0.35"/>
-      <polyline points="72,48 80,43 88,37 96,32 104,26" fill="none" stroke="#e8a020" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.75"/>
-      <line x1="72" y1="38" x2="72" y2="86" stroke="#e8a020" stroke-width="0.7" stroke-dasharray="2 3" opacity="0.3"/>
-      <line x1="22" y1="58" x2="22" y2="82" stroke="#8fa8c0" stroke-width="0.9" opacity="0.45"/>
-      <rect x="19" y="66" width="6" height="12" rx="1.2" fill="#3aad7a" opacity="0.65"/>
-      <line x1="40" y1="44" x2="40" y2="76" stroke="#8fa8c0" stroke-width="0.9" opacity="0.45"/>
-      <rect x="37" y="52" width="6" height="18" rx="1.2" fill="#3aad7a" opacity="0.65"/>
-      <line x1="14" y1="10" x2="14" y2="90" stroke="#2a4060" stroke-width="1.2" stroke-linecap="round"/>
-      <line x1="14" y1="90" x2="108" y2="90" stroke="#2a4060" stroke-width="1.2" stroke-linecap="round"/>
-      <circle cx="14" cy="90" r="2.8" fill="#e8a020"/>
-      <path d="M16 88 L16 18 L37 52 L58 18 L58 88" fill="none" stroke="#f5f8fa" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
-      <path d="M64 18 L64 88 L76 88 Q106 88 106 53 Q106 18 76 18 Z" fill="none" stroke="#e8a020" stroke-width="3" stroke-linejoin="round"/>
-    </svg>
+  <div class="identity-card">
+    <img class="profile-photo" src="CreativeDude_LinkedIn_Picture.png" alt="Marcin Duda profile photo">
     <div>
       <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--white);margin-bottom:2px;">Marcin Duda</div>
       <div style="font-size:13px;color:var(--amber-2);font-weight:500;margin-bottom:10px;letter-spacing:.02em;">Analytics Translator</div>
