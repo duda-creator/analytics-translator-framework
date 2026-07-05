@@ -118,6 +118,17 @@ body {
 .section { display: none; padding: 40px 44px; max-width: 1400px; }
 .section.active { display: block; }
 
+.chat-embed-stack {
+  display: grid;
+  gap: 16px;
+}
+
+.chat-embed-stack gradio-app {
+  display: block;
+  width: 100%;
+  min-height: 720px;
+}
+
 .section-hero {
   margin-bottom: 36px;
   padding-bottom: 28px;
@@ -859,6 +870,13 @@ body[data-translation-mode="business"] #ep-sprawl .phase-list li {
   </div>
 
   <div class="nav-section">
+    <div class="nav-section-label">Interactive Chat</div>
+    <a class="nav-item" onclick="showSection('interactive-chat')">
+      <span class="nav-dot"></span> AI Advisor
+    </a>
+  </div>
+
+  <div class="nav-section">
     <div class="nav-section-label">Sample Dashboards</div>
     <a class="nav-item" href="https://duda-creator.github.io/Treasury-Analytics/Treasury_Command_Center.html" target="_blank" rel="noopener noreferrer">
       <span class="nav-dot"></span> Treasury Command Center
@@ -1522,6 +1540,28 @@ body[data-translation-mode="business"] #ep-sprawl .phase-list li {
         <tr><td class="change-what">Artefact 06 (new)</td><td><span class="change-scope scope-add">ADD</span></td><td>Data Product Passport produced at Build stage. Contains metric ownership summary, consumption interfaces, SLA, known limitations.</td><td>Artefacts 01–05 unchanged in purpose and format</td></tr>
       </tbody>
     </table>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     INTERACTIVE CHAT
+══════════════════════════════════════════════ -->
+<section id="interactive-chat" class="section">
+  <div class="section-hero">
+    <div class="section-eyebrow">Marcin Duda · Analytics Translator</div>
+    <h2 class="section-title">AI Advisor</h2>
+    <p class="section-lead">Use this interactive advisor to discuss your analytics challenges, test ideas, and explore practical next steps in a conversational format.</p>
+  </div>
+
+  <div class="card">
+    <div class="chat-embed-stack">
+      <script
+        type="module"
+        src="https://gradio.s3-us-west-2.amazonaws.com/6.14.0/gradio.js"
+      ></script>
+
+      <gradio-app src="https://mwduda-twin.hf.space"></gradio-app>
+    </div>
   </div>
 </section>
 
