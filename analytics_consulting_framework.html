@@ -123,10 +123,12 @@ body {
   gap: 16px;
 }
 
-.chat-embed-stack gradio-app {
+.chat-embed-stack iframe {
   display: block;
   width: 100%;
   min-height: 720px;
+  border: 0;
+  border-radius: var(--radius-sm);
 }
 
 .section-hero {
@@ -1555,12 +1557,12 @@ body[data-translation-mode="business"] #ep-sprawl .phase-list li {
 
   <div class="card">
     <div class="chat-embed-stack">
-      <script
-        type="module"
-        src="https://gradio.s3-us-west-2.amazonaws.com/6.14.0/gradio.js"
-      ></script>
-
-      <gradio-app src="https://mwduda-twin.hf.space"></gradio-app>
+      <iframe
+        src="https://mwduda-twin.hf.space"
+        title="AI Advisor"
+        loading="lazy"
+        allow="clipboard-read; clipboard-write"
+      ></iframe>
     </div>
   </div>
 </section>
